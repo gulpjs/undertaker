@@ -1,0 +1,33 @@
+{
+  "name": "undertaker",
+  "version": "0.0.0",
+  "description": "undertaker ==========",
+  "main": "index.js",
+  "scripts": {
+    "test": "lab -cv"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/phated/undertaker"
+  },
+  "keywords": [
+    "task",
+    "registry",
+    "runner"
+  ],
+  "author": "Blaine Bublitz <blaine@iceddev.com> (http://iceddev.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/phated/undertaker/issues"
+  },
+  "homepage": "https://github.com/phated/undertaker",
+  "devDependencies": {
+    "lab": "^4.1.0"
+  },
+  "dependencies": {
+    "bach": "^0.2.0",
+    "es6-weak-map": "^0.1.1",
+    "lodash": "^2.4.1",
+    "undertaker-registry": "0.0.0"
+  }
+}
