@@ -4,7 +4,7 @@
   "description": "undertaker ==========",
   "main": "index.js",
   "scripts": {
-    "test": "lab -c"
+    "test": "lab -cv"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
     "lab": "^4.1.0"
   },
   "dependencies": {
-    "bach": "git://github.com/phated/bach",
+    "bach": "^0.2.0",
     "es6-weak-map": "^0.1.1",
     "lodash": "^2.4.1",
     "undertaker-registry": "0.0.0"

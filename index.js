@@ -32,6 +32,8 @@ Undertaker.prototype.get = function get(name){
   if(meta){
     return meta.orig;
   }
+
+  return wrapper;
 };
 
 Undertaker.prototype.set = function set(name, fn){
