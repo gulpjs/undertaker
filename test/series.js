@@ -81,4 +81,13 @@ describe('series', function(){
       done();
     });
   });
+
+  it('should throw on unregistered task', function(done){
+    function unregistered(){
+      taker.series('unregistered');
+    }
+
+    expect(unregistered).to.throw('Task never defined: unregistered');
+    done();
+  });
 });

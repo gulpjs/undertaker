@@ -81,4 +81,13 @@ describe('parallel', function(){
       done();
     });
   });
+
+  it('should throw on unregistered task', function(done){
+    function unregistered(){
+      taker.parallel('unregistered');
+    }
+
+    expect(unregistered).to.throw('Task never defined: unregistered');
+    done();
+  });
 });
