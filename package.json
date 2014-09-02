@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "bach": "^0.3.0",
-    "es6-weak-map": "^0.1.1",
+    "es6-weak-map": "^0.1.2",
     "lodash": "^2.4.1",
     "undertaker-registry": "0.0.1"
   }
