@@ -9,27 +9,14 @@ var after = lab.after;
 var afterEach = lab.afterEach;
 var expect = require('lab').expect;
 
-var archy = require('archy');
-
 var Undertaker = require('../');
 
-function fn1(done){
-  done(null, 1);
-}
+var simple = require('./fixtures/taskTree/simple');
+var singleLevel = require('./fixtures/taskTree/singleLevel');
+var doubleLevel = require('./fixtures/taskTree/doubleLevel');
+var tripleLevel = require('./fixtures/taskTree/tripleLevel');
 
-function fn2(done){
-  setTimeout(function(){
-    done(null, 2);
-  }, 500);
-}
-
-function fn3(done){
-  done(null, 3);
-}
-
-function fnError(done){
-  done(new Error('An Error Occurred'));
-}
+function noop(done){ done(); }
 
 describe('tree', function(){
 
@@ -37,10 +24,14 @@ describe('tree', function(){
 
   beforeEach(function(done){
     taker = new Undertaker();
-    taker.task('test1', fn1);
-    taker.task('test2', fn2);
-    taker.task('test3', fn3);
-    taker.task('error', fnError);
+    done();
+  });
+
+  it('should return a simple tree by default', function(done){
+    taker.task('test1', noop);
+    taker.task('test2', noop);
+    taker.task('test3', noop);
+    taker.task('error', noop);
 
     var ser = taker.series('test1', 'test2');
     var anon = function(done){
@@ -51,31 +42,45 @@ describe('tree', function(){
     taker.task('par', taker.parallel('test1', 'test2', 'test3'));
     taker.task('serpar', taker.series('ser', 'par'));
     taker.task('serpar2', taker.series(ser, anon));
-    done();
-  });
 
-  it('should return a simple tree by default', function(done){
     var tree = taker.tree();
-    expect(tree).to.deep.equal([
-      'test1',
-      'test2',
-      'test3',
-      'error',
-      'ser',
-      'par',
-      'serpar',
-      'serpar2'
-    ]);
+
+    expect(tree).to.deep.equal(simple);
     done();
   });
 
-  it('should return a deep tree if specified in options', function(done){
+  it('should form a 1 level tree', function(done){
+    taker.task('fn1', noop);
+    taker.task('fn2', noop);
+
     var tree = taker.tree({ deep: true });
-    // console.log(JSON.stringify(tree, null, 2));
-    // console.log(archy({
-    //   label: 'top',
-    //   nodes: tree
-    // }));
+
+    expect(tree).to.deep.equal(singleLevel);
+    done();
+  });
+
+  it('should form a 2 level nested tree', function(done){
+    taker.task('fn1', noop);
+    taker.task('fn2', noop);
+    taker.task('fn3', taker.series('fn1', 'fn2'));
+
+    var tree = taker.tree({ deep: true });
+
+    expect(tree).to.deep.equal(doubleLevel);
+    done();
+  });
+
+  it('should form a 3 level nested tree', function(done){
+    var anon = function(done){
+      done();
+    };
+    taker.task('fn1', taker.parallel(anon, noop));
+    taker.task('fn2', taker.parallel(anon, noop));
+    taker.task('fn3', taker.series('fn1', 'fn2'));
+
+    var tree = taker.tree({ deep: true });
+
+    expect(tree).to.deep.equal(tripleLevel);
     done();
   });
 
