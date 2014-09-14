@@ -37,6 +37,9 @@ taker.task('all', taker.parallel('combined', 'task3'));
 
 ## API
 
+__Task functions can be completed in any of the ways supported by
+[`async-done`](https://github.com/phated/async-done#completion-and-error-resolution)__
+
 ### `get(taskName)` => Function
 
 Takes a string (`taskName`) representing the name of a register task and
