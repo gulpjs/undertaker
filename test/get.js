@@ -11,11 +11,7 @@ var expect = require('lab').expect;
 
 var Undertaker = require('../');
 
-function noop(done){
-  done();
-}
-
-var anon = function(){};
+function noop(done){ done(); }
 
 describe('task', function(){
 
@@ -23,33 +19,6 @@ describe('task', function(){
 
   beforeEach(function(done){
     taker = new Undertaker();
-    done();
-  });
-
-  it('should register a named function', function(done){
-    taker.task(noop);
-    expect(taker.task('noop')).to.equal(noop);
-    done();
-  });
-
-  it('should register an anonymous function by string name', function(done){
-    taker.task('test1', anon);
-    expect(taker.task('test1')).to.equal(anon);
-    done();
-  });
-
-  it('should throw on register an anonymous function without string name', function(done){
-    function noName(){
-      taker.task(anon);
-    }
-
-    expect(noName).to.throw(Error, 'Task name must be specified');
-    done();
-  });
-
-  it('should register a named function by string name', function(done){
-    taker.task('test1', noop);
-    expect(taker.task('test1')).to.equal(noop);
     done();
   });
 
