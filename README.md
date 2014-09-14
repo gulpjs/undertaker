@@ -40,7 +40,7 @@ taker.task('all', taker.parallel('combined', 'task3'));
 __Task functions can be completed in any of the ways supported by
 [`async-done`](https://github.com/phated/async-done#completion-and-error-resolution)__
 
-### `new Undertaker([RegistyConstructor])`
+### `new Undertaker([RegistryConstructor])`
 
 The constructor is used to create a new instance of `Undertaker`. Each instance of
 `Undertaker` gets its own instance of a registry. By default, the registry is an
