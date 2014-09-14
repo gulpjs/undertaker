@@ -42,18 +42,26 @@ taker.task('all', taker.parallel('combined', 'task3'));
 Takes a string (`taskName`) representing the name of a register task and
 returns the registered function.
 
-### `set([taskName,] fn)`
+### `set(taskName, fn)`
 
 Takes a string (`taskName`) and a function (`fn`) to register as a task.
-The `fn` gets registered in the registry by the `taskName`. The `taskName`
-is optional if the `fn` is a named function. Will throw if no `taskName` or
-function name is available.
+The `fn` gets registered in the registry by the `taskName`.
+
+Will throw if:
+
+* `taskName` is missing or not a string
+* `fn` is missing or not a function
 
 ### `task([taskName,] fn)` => [Function]
 
 An alias for `get` and `set`. If a string (`taskName`) is given as the only
 argument, the `get` method will be called. If a function (`fn`) and optionally
 a string (`taskName`) is given, the `set` method will be called.
+
+This function allows you to pass a named function as the only argument and its
+name will be turned into the `taskName` when the `set` method is called.
+
+Will throw in the same ways mentioned in `get` and `set`.
 
 ### `series(taskName || fn...)` => Function
 
