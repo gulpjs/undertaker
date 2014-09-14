@@ -11,6 +11,7 @@ var tree = require('./lib/tree');
 var task = require('./lib/task');
 var series = require('./lib/series');
 var parallel = require('./lib/parallel');
+var registry = require('./lib/registry');
 var validateRegistry = require('./lib/helpers/validateRegistry');
 
 function Undertaker(Registry){
@@ -18,9 +19,9 @@ function Undertaker(Registry){
 
   Registry = Registry || DefaultRegistry;
 
-  this.registry = new Registry();
+  this._registry = new Registry();
 
-  validateRegistry(this.registry);
+  validateRegistry(this._registry);
 }
 
 inherits(Undertaker, EventEmitter);
@@ -36,5 +37,7 @@ Undertaker.prototype.task = task;
 Undertaker.prototype.series = series;
 
 Undertaker.prototype.parallel = parallel;
+
+Undertaker.prototype.registry = registry;
 
 module.exports = Undertaker;
