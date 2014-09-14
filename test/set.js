@@ -13,7 +13,7 @@ var Undertaker = require('../');
 
 function noop(done){ done(); }
 
-describe('task', function(){
+describe('set', function(){
 
   var taker;
 

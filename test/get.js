@@ -13,7 +13,7 @@ var Undertaker = require('../');
 
 function noop(done){ done(); }
 
-describe('task', function(){
+describe('get', function(){
 
   var taker;
 
@@ -34,7 +34,7 @@ describe('task', function(){
   });
 
   it('should return a function that was registered in some other way', function(done){
-    taker.registry._tasks.test1 = noop;
+    taker.registry()._tasks.test1 = noop;
     expect(taker.task('test1')).to.equal(noop);
     done();
   });
