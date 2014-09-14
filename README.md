@@ -86,7 +86,7 @@ When the returned function is executed, the tasks or functions will be executed
 in parallel, all being executed at the same time. If an error occurs, all execution
 will complete.
 
-### `tree([options])`
+### `tree([options])` => Object
 
 Optionally takes an object (`options`) and returns an object representing the
 tree of registered tasks. The object returned is [`archy`](https://www.npmjs.org/package/archy)
