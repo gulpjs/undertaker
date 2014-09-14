@@ -12,8 +12,16 @@ var expect = require('lab').expect;
 var Undertaker = require('../');
 
 var DefaultRegistry = require('undertaker-registry');
+var CommonRegistry = require('undertaker-common-tasks');
+
+function noop(){}
 
 function CustomRegistry(){}
+CustomRegistry.prototype.get = noop;
+CustomRegistry.prototype.set = noop;
+CustomRegistry.prototype.tasks = noop;
+
+function InvalidRegistry(){}
 
 describe('registry', function(){
 
@@ -28,6 +36,41 @@ describe('registry', function(){
     var taker = new Undertaker();
     expect(taker.registry).to.be.an.instanceof(DefaultRegistry);
     expect(taker.registry).to.not.be.an.instanceof(CustomRegistry);
+    done();
+  });
+
+  it('should take a registry that pre-defines tasks', function(done){
+    var taker = new Undertaker(CommonRegistry);
+    expect(taker.registry).to.be.an.instanceof(CommonRegistry);
+    expect(taker.registry).to.be.an.instanceof(DefaultRegistry);
+    expect(taker.get('clean')).to.be.a('function');
+    expect(taker.get('serve')).to.be.a('function');
+    done();
+  });
+
+  it('should throw upon invalid registry', function(done){
+    function noGet(){
+      var taker = new Undertaker(InvalidRegistry);
+    }
+
+    expect(noGet).to.throw(Error, 'Custom registry must have `get` function');
+    InvalidRegistry.prototype.get = noop;
+
+    function noSet(){
+      var taker = new Undertaker(InvalidRegistry);
+    }
+
+    expect(noSet).to.throw(Error, 'Custom registry must have `set` function');
+    InvalidRegistry.prototype.set = noop;
+
+    function noTasks(){
+      var taker = new Undertaker(InvalidRegistry);
+    }
+
+    expect(noTasks).to.throw(Error, 'Custom registry must have `tasks` function');
+    InvalidRegistry.prototype.tasks = noop;
+
+    var taker = new Undertaker(InvalidRegistry);
     done();
   });
 });

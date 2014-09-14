@@ -23,7 +23,8 @@
   "homepage": "https://github.com/phated/undertaker",
   "devDependencies": {
     "archy": "0.0.2",
-    "lab": "^4.1.0"
+    "lab": "^4.1.0",
+    "undertaker-common-tasks": "git://github.com/phated/undertaker-common-tasks"
   },
   "dependencies": {
     "bach": "^0.3.0",

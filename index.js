@@ -11,6 +11,7 @@ var metadata = require('./lib/metadata');
 var buildTree = require('./lib/buildTree');
 var normalizeArgs = require('./lib/normalizeArgs');
 var createExtensions = require('./lib/createExtensions');
+var validateRegistry = require('./lib/validateRegistry');
 
 function Undertaker(Registry){
   EventEmitter.call(this);
@@ -18,6 +19,8 @@ function Undertaker(Registry){
   Registry = Registry || DefaultRegistry;
 
   this.registry = new Registry();
+
+  validateRegistry(this.registry);
 }
 
 inherits(Undertaker, EventEmitter);
