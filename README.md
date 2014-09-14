@@ -40,6 +40,17 @@ taker.task('all', taker.parallel('combined', 'task3'));
 __Task functions can be completed in any of the ways supported by
 [`async-done`](https://github.com/phated/async-done#completion-and-error-resolution)__
 
+### `new Undertaker([RegistryConstructor])`
+
+The constructor is used to create a new instance of `Undertaker`. Each instance of
+`Undertaker` gets its own instance of a registry. By default, the registry is an
+instance of [`undertaker-registry`](https://github.com/phated/undertaker-registry)
+but it can be any other registry that follows the [Custom Registries API](#custom-registries).
+
+To use a custom registry, pass the custom registry's constructor function when
+instantiating a new `Undertaker` instance. This will use the custom constructor
+to create the registry for this instance.
+
 ### `get(taskName)` => Function
 
 Takes a string (`taskName`) representing the name of a register task and
@@ -86,6 +97,17 @@ When the returned function is executed, the tasks or functions will be executed
 in parallel, all being executed at the same time. If an error occurs, all execution
 will complete.
 
+### `registry([registryInstance])`
+
+Optionally takes an instantiated registry object. If no arguments are passed, returns
+the current registry object. If an instance of a registry (`customRegistry`) is passed
+the tasks from the current registry will be transferred to it and the current registry
+will be replaced with the new registry.
+
+The ability to assign new registries will allow you to pre-define/share tasks or add
+custom functionality to your registries. See [Custom Registries](#custom-registries)
+for more information.
+
 ### `tree([options])` => Object
 
 Optionally takes an object (`options`) and returns an object representing the
@@ -96,6 +118,10 @@ property that can be used to determine if the node is a `task` or `function`.
 #### `options`
 
 * `deep` - if the whole tree should be returned (Default: `false`)
+
+## Custom Registries
+
+Coming Soon...
 
 ## License
 
