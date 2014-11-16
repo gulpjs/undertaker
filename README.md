@@ -1,6 +1,8 @@
 undertaker
 ==========
 
+[![Build Status](https://travis-ci.org/phated/undertaker.svg?branch=master)](https://travis-ci.org/phated/undertaker)
+
 Task registry that allows composition through `series`/`parallel` methods.
 
 ## Usage
