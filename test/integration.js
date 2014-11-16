@@ -16,44 +16,44 @@ var Undertaker = require('../');
 
 describe('integrations', function() {
 
-    var taker;
+  var taker;
 
-    beforeEach(function(done) {
-        taker = new Undertaker();
-        done();
+  beforeEach(function(done) {
+    taker = new Undertaker();
+    done();
+  });
+
+  it('should handle vinyl streams', function(done) {
+    taker.task('test', function () {
+      return vinyl.src('./fixtures/test.js', {cwd: __dirname})
+        .pipe(vinyl.dest('./fixtures/out', {cwd: __dirname}));
     });
 
-    it('should handle vinyl streams', function(done) {
-        taker.task('test', function () {
-            return vinyl.src('./fixtures/test.js', {cwd: __dirname})
-                .pipe(vinyl.dest('./fixtures/out', {cwd: __dirname}));
-        });
+    taker.parallel('test')(done);
+  });
 
-        taker.parallel('test')(done);
+  it('should exhaust vinyl streams', function(done) {
+    taker.task('test', function () {
+      return vinyl.src('./fixtures/test.js', {cwd: __dirname});
     });
 
-    it('should exhaust vinyl streams', function(done) {
-        taker.task('test', function () {
-            return vinyl.src('./fixtures/test.js', {cwd: __dirname});
-        });
+    taker.parallel('test')(done);
+  });
 
-        taker.parallel('test')(done);
+  it('should lints all piped files', function(done) {
+    taker.task('test', function () {
+      return vinyl.src('./fixtures/test.js', {cwd: __dirname})
+        .pipe(jshint());
     });
 
-    it('should lints all piped files', function(done) {
-        taker.task('test', function () {
-            return vinyl.src('./fixtures/test.js', {cwd: __dirname})
-                .pipe(jshint());
-        });
+    taker.parallel('test')(done);
+  });
 
-        taker.parallel('test')(done);
+  it('should handle a child process return', function(done) {
+    taker.task('test', function () {
+      return spawn('ls', ['-lh', __dirname]);
     });
 
-    it('should handle a child process return', function(done) {
-        taker.task('test', function () {
-            return spawn('ls', ['-lh', __dirname]);
-        });
-
-        taker.parallel('test')(done);
-    });
+    taker.parallel('test')(done);
+  });
 });
