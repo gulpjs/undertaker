@@ -14,6 +14,7 @@ var Undertaker = require('../');
 
 var DefaultRegistry = require('undertaker-registry');
 var CommonRegistry = require('undertaker-common-tasks');
+var MetadataRegistry = require('undertaker-task-metadata');
 
 function noop(){}
 
@@ -59,9 +60,32 @@ describe('registry', function(){
       var customRegistry = new DefaultRegistry();
       taker.registry(customRegistry);
 
-      expect(customRegistry.get('clean')).to.be.a.function();
-      expect(customRegistry.get('serve')).to.be.a.function();
+      expect(taker.get('clean')).to.be.a.function();
+      expect(taker.get('serve')).to.be.a.function();
       done();
+    });
+
+    it('allows multiple custom registries to used', function(done){
+      var taker = new Undertaker();
+      taker.registry(new CommonRegistry());
+
+      expect(taker.get('clean')).to.be.a.function();
+      expect(taker.get('serve')).to.be.a.function();
+
+      taker.registry(new MetadataRegistry());
+      taker.set('context', function(cb){
+        expect(this).to.deep.equal({ name: 'context' });
+        cb();
+        done();
+      });
+
+      taker.registry(new DefaultRegistry());
+
+      expect(taker.get('clean')).to.be.a.function();
+      expect(taker.get('serve')).to.be.a.function();
+      expect(taker.get('context')).to.be.a.function();
+
+      taker.series('context')();
     });
   });
 
