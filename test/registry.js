@@ -79,6 +79,12 @@ describe('registry', function(){
         done();
       });
 
+      taker.registry(new DefaultRegistry());
+
+      expect(taker.get('clean')).to.be.a.function();
+      expect(taker.get('serve')).to.be.a.function();
+      expect(taker.get('context')).to.be.a.function();
+
       taker.series('context')();
     });
   });
