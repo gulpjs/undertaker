@@ -15,6 +15,7 @@ var jshint = require('gulp-jshint');
 var spawn = require('child_process').spawn;
 var once = require('once');
 var promisedDel = require('promised-del');
+var through = require('through2');
 
 var Undertaker = require('../');
 
@@ -80,5 +81,23 @@ describe('integrations', function() {
       expect(count).to.equal(1);
       done(err);
     });
+  });
+
+  it('can use lastRun with vinyl.src `since` option', function(done){
+    taker.task('test', function () {
+      return vinyl.src('./fixtures/test.js', {cwd: __dirname })
+        .pipe(vinyl.dest('./fixtures/out', {cwd: __dirname}));
+    });
+
+    taker.task('test2', function () {
+      return vinyl.src('./fixtures/out/*.js', {cwd: __dirname, since: taker.lastRun('test') })
+        .pipe(through.obj(function(file, enc, cb){
+          expect(file).to.not.exist();
+          cb();
+        }))
+        .pipe(vinyl.dest('./fixtures/out', {cwd: __dirname}));
+    });
+
+    taker.series('test', 'test2')(done);
   });
 });

@@ -10,11 +10,14 @@ var set = require('./lib/set');
 var tree = require('./lib/tree');
 var task = require('./lib/task');
 var series = require('./lib/series');
+var lastRun = require('./lib/last-run');
 var parallel = require('./lib/parallel');
 var registry = require('./lib/registry');
 var validateRegistry = require('./lib/helpers/validateRegistry');
 
 function Undertaker(Registry){
+  var self = this;
+
   EventEmitter.call(this);
 
   Registry = Registry || DefaultRegistry;
@@ -22,6 +25,11 @@ function Undertaker(Registry){
   this._registry = new Registry();
 
   validateRegistry(this._registry);
+
+  this._lastRuns = {};
+  this.on('stop', function(e){
+    self._lastRuns[e.name] = e.time;
+  });
 }
 
 inherits(Undertaker, EventEmitter);
@@ -35,6 +43,8 @@ Undertaker.prototype.tree = tree;
 Undertaker.prototype.task = task;
 
 Undertaker.prototype.series = series;
+
+Undertaker.prototype.lastRun = lastRun;
 
 Undertaker.prototype.parallel = parallel;
 
