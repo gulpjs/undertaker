@@ -15,6 +15,8 @@ var registry = require('./lib/registry');
 var validateRegistry = require('./lib/helpers/validateRegistry');
 
 function Undertaker(Registry){
+  var self = this;
+
   EventEmitter.call(this);
 
   Registry = Registry || DefaultRegistry;
@@ -22,6 +24,11 @@ function Undertaker(Registry){
   this._registry = new Registry();
 
   validateRegistry(this._registry);
+
+  this._last_runs = {};
+  this.on('stop', function(e) {
+    self._last_runs[e.name] = e;
+  });
 }
 
 inherits(Undertaker, EventEmitter);
