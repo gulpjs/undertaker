@@ -10,10 +10,11 @@ var beforeEach = lab.beforeEach;
 var after = lab.after;
 var afterEach = lab.afterEach;
 
-var expect = require('lab').expect;
 var vinyl = require('vinyl-fs');
 var jshint = require('gulp-jshint');
 var spawn = require('child_process').spawn;
+var once = require('once');
+var promisedDel = require('promised-del');
 
 var Undertaker = require('../');
 
@@ -58,5 +59,26 @@ describe('integrations', function() {
     });
 
     taker.parallel('test')(done);
+  });
+
+  it('should run dependencies once', function(done) {
+    var count = 0;
+
+    taker.task('clean', once(function() {
+      count++;
+      return promisedDel(['./fixtures/some-build.txt'], {cwd: __dirname});
+    }));
+
+    taker.task('build-this', taker.series(['clean', function(done){done();}]));
+    taker.task('build-that', taker.series(['clean', function(done){done();}]));
+    taker.task('build', taker.series([
+      'clean',
+      taker.parallel(['build-this', 'build-that'])
+    ]));
+
+    taker.parallel('build')(function(err){
+      expect(count).to.equal(1);
+      done(err);
+    });
   });
 });
