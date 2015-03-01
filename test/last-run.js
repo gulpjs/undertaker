@@ -16,7 +16,7 @@ function fn(done){
   done();
 }
 
-describe('parallel', function(){
+describe('lastRun', function(){
 
   var taker;
 
@@ -28,18 +28,23 @@ describe('parallel', function(){
   });
 
   it('should record tasks time execution', function(done){
+    var since = Date.now();
     taker.parallel('test1')(function(err, results){
-      expect(taker._last_runs.test1).to.not.be.undefined();
-      expect(taker._last_runs.test1.time).to.not.be.undefined();
-      expect(taker._last_runs.test2).to.be.undefined();
+      expect(taker.lastRun('test1')).to.exist();
+      expect(taker.lastRun('test1')).to.be.within(since, Date.now());
+      expect(taker.lastRun('test2')).to.not.exist();
+      expect(taker.lastRun('notexists')).to.not.exist();
       done(err);
     });
   });
 
   it('should record all tasks time execution', function(done){
+    var since = Date.now();
     taker.parallel('test1', 'test2')(function(err, results){
-      expect(taker._last_runs.test1).to.not.be.undefined();
-      expect(taker._last_runs.test2).to.not.be.undefined();
+      expect(taker.lastRun('test1')).to.exist();
+      expect(taker.lastRun('test1')).to.be.within(since, Date.now());
+      expect(taker.lastRun('test2')).to.exist();
+      expect(taker.lastRun('test2')).to.be.within(since, Date.now());
       done(err);
     });
   });

@@ -121,6 +121,11 @@ property that can be used to determine if the node is a `task` or `function`.
 
 * `deep` - if the whole tree should be returned (Default: `false`)
 
+### `lastRun(taskName)` => [Timestamp]
+
+Takes a string (`taskName`) and returns a timestamp of the last time the task completed.
+Returns `undefined` if the task has not been run.
+
 ## Custom Registries
 
 Custom registries are constructor functions allowing you to pre-define/share tasks
