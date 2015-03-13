@@ -33,7 +33,7 @@
     "vinyl-fs": "^1.0.0"
   },
   "dependencies": {
-    "bach": "^0.4.0",
+    "bach": "^0.4.1",
     "es6-weak-map": "^0.1.2",
     "lodash": "^3.5.0",
     "undertaker-registry": "0.0.2"
