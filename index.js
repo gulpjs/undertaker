@@ -24,6 +24,8 @@ function Undertaker(Registry){
 
   this._registry = new Registry();
 
+  this._settle = (process.argv.indexOf('--undertaker-settle') !== -1);
+
   validateRegistry(this._registry);
 
   this._lastRuns = {};
