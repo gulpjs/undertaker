@@ -5,10 +5,7 @@ var expect = require('code').expect;
 
 var describe = lab.describe;
 var it = lab.it;
-var before = lab.before;
 var beforeEach = lab.beforeEach;
-var after = lab.after;
-var afterEach = lab.afterEach;
 
 var vinyl = require('vinyl-fs');
 var jshint = require('gulp-jshint');
@@ -72,12 +69,16 @@ describe('integrations', function() {
       return promisedDel(['./fixtures/some-build.txt'], {cwd: __dirname});
     }));
 
-    taker.task('build-this', taker.series(['clean', function(done){done();}]));
-    taker.task('build-that', taker.series(['clean', function(done){done();}]));
-    taker.task('build', taker.series([
+    taker.task('build-this', taker.series('clean', function(cb){
+      cb();
+    }));
+    taker.task('build-that', taker.series('clean', function(cb){
+      cb();
+    }));
+    taker.task('build', taker.series(
       'clean',
       taker.parallel(['build-this', 'build-that'])
-    ]));
+    ));
 
     taker.parallel('build')(function(err){
       expect(count).to.equal(1);
@@ -94,12 +95,16 @@ describe('integrations', function() {
       del(['./fixtures/some-build.txt'], {cwd: __dirname}, cb);
     }));
 
-    taker.task('build-this', taker.series(['clean', function(done){done();}]));
-    taker.task('build-that', taker.series(['clean', function(done){done();}]));
-    taker.task('build', taker.series([
+    taker.task('build-this', taker.series('clean', function(cb){
+      cb();
+    }));
+    taker.task('build-that', taker.series('clean', function(cb){
+      cb();
+    }));
+    taker.task('build', taker.series(
       'clean',
       taker.parallel(['build-this', 'build-that'])
-    ]));
+    ));
 
     taker.parallel('build')(function(err){
       expect(count).to.equal(1);

@@ -5,10 +5,7 @@ var expect = require('code').expect;
 
 var describe = lab.describe;
 var it = lab.it;
-var before = lab.before;
 var beforeEach = lab.beforeEach;
-var after = lab.after;
-var afterEach = lab.afterEach;
 
 var Undertaker = require('../');
 
@@ -35,8 +32,8 @@ describe('tree', function(){
     taker.task('error', noop);
 
     var ser = taker.series('test1', 'test2');
-    var anon = function(done){
-      done();
+    var anon = function(cb){
+      cb();
     };
 
     taker.task('ser', taker.series('test1', 'test2'));
@@ -72,8 +69,8 @@ describe('tree', function(){
   });
 
   it('should form a 3 level nested tree', function(done){
-    var anon = function(done){
-      done();
+    var anon = function(cb){
+      cb();
     };
     taker.task('fn1', taker.parallel(anon, noop));
     taker.task('fn2', taker.parallel(anon, noop));

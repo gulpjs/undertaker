@@ -5,10 +5,6 @@ var expect = require('code').expect;
 
 var describe = lab.describe;
 var it = lab.it;
-var before = lab.before;
-var beforeEach = lab.beforeEach;
-var after = lab.after;
-var afterEach = lab.afterEach;
 
 var Undertaker = require('../');
 
@@ -115,28 +111,31 @@ describe('registry', function(){
     });
 
     it('should throw upon invalid registry', function(done){
+      /*eslint no-unused-vars: 0*/
+      var taker;
+
       function noGet(){
-        var taker = new Undertaker(InvalidRegistry);
+        taker = new Undertaker(InvalidRegistry);
       }
 
       expect(noGet).to.throw(Error, 'Custom registry must have `get` function');
       InvalidRegistry.prototype.get = noop;
 
       function noSet(){
-        var taker = new Undertaker(InvalidRegistry);
+        taker = new Undertaker(InvalidRegistry);
       }
 
       expect(noSet).to.throw(Error, 'Custom registry must have `set` function');
       InvalidRegistry.prototype.set = noop;
 
       function noTasks(){
-        var taker = new Undertaker(InvalidRegistry);
+        taker = new Undertaker(InvalidRegistry);
       }
 
       expect(noTasks).to.throw(Error, 'Custom registry must have `tasks` function');
       InvalidRegistry.prototype.tasks = noop;
 
-      var taker = new Undertaker(InvalidRegistry);
+      taker = new Undertaker(InvalidRegistry);
       done();
     });
   });

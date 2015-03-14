@@ -16,7 +16,7 @@
     "lib"
   ],
   "scripts": {
-    "test": "lab -cv"
+    "test": "lab -cvL"
   },
   "dependencies": {
     "bach": "^0.4.1",
