@@ -5,10 +5,7 @@ var expect = require('code').expect;
 
 var describe = lab.describe;
 var it = lab.it;
-var before = lab.before;
 var beforeEach = lab.beforeEach;
-var after = lab.after;
-var afterEach = lab.afterEach;
 
 var Undertaker = require('../');
 

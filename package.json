@@ -2,31 +2,36 @@
   "name": "undertaker",
   "version": "0.4.0",
   "description": "Task registry that allows composition through series/parallel methods.",
-  "main": "index.js",
-  "scripts": {
-    "test": "lab -cv"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/phated/undertaker"
-  },
-  "keywords": [
-    "task",
-    "registry",
-    "runner"
-  ],
   "author": "Blaine Bublitz <blaine@iceddev.com> (http://iceddev.com/)",
+  "contributors": [
+    "Damien Lebrun <dinoboff@hotmail.com>"
+  ],
+  "repository": "phated/undertaker",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/phated/undertaker/issues"
+  "engines": {
+    "node": ">= 0.10"
   },
-  "homepage": "https://github.com/phated/undertaker",
+  "main": "index.js",
+  "files": [
+    "LICENSE",
+    "index.js",
+    "lib"
+  ],
+  "scripts": {
+    "test": "lab -cvL"
+  },
+  "dependencies": {
+    "bach": "^0.4.1",
+    "es6-weak-map": "^0.1.2",
+    "lodash": "^3.5.0",
+    "undertaker-registry": "0.0.2"
+  },
   "devDependencies": {
     "async-once": "^1.0.0",
     "code": "^1.2.1",
     "del": "^1.1.1",
     "gulp-jshint": "^1.8.4",
-    "lab": "^5.2.0",
+    "lab": "^5.5.0",
     "once": "^1.3.1",
     "promised-del": "^1.0.2",
     "through2": "^0.6.3",
@@ -34,10 +39,9 @@
     "undertaker-task-metadata": "git://github.com/undertakerjs/undertaker-task-metadata",
     "vinyl-fs": "^1.0.0"
   },
-  "dependencies": {
-    "bach": "^0.4.1",
-    "es6-weak-map": "^0.1.2",
-    "lodash": "^3.5.0",
-    "undertaker-registry": "0.0.2"
-  }
+  "keywords": [
+    "registry",
+    "runner",
+    "task"
+  ]
 }

@@ -5,10 +5,7 @@ var expect = require('code').expect;
 
 var describe = lab.describe;
 var it = lab.it;
-var before = lab.before;
 var beforeEach = lab.beforeEach;
-var after = lab.after;
-var afterEach = lab.afterEach;
 
 var Undertaker = require('../');
 
@@ -73,7 +70,7 @@ describe('parallel', function(){
   });
 
   it('should stop processing on error', function(done){
-    taker.on('error', function(err){
+    taker.on('error', function(){
       // to keep the process from crashing
     });
     taker.parallel('test1', 'error', 'test3')(function(err, results){
