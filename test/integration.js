@@ -90,7 +90,7 @@ describe('integrations', function() {
     var count = 0;
 
     taker.task('clean', aOnce(function(cb) {
-      console.log(cb());
+      cb();
       count++;
       del(['./fixtures/some-build.txt'], {cwd: __dirname}, cb);
     }));
