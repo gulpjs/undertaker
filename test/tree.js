@@ -35,11 +35,13 @@ describe('tree', function(){
     var anon = function(cb){
       cb();
     };
+    anon.displayName = '<display name>';
 
     taker.task('ser', taker.series('test1', 'test2'));
     taker.task('par', taker.parallel('test1', 'test2', 'test3'));
     taker.task('serpar', taker.series('ser', 'par'));
     taker.task('serpar2', taker.series(ser, anon));
+    taker.task(anon);
 
     var tree = taker.tree();
 
