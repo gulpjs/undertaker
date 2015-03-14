@@ -8,5 +8,6 @@ module.exports = [
   'ser',
   'par',
   'serpar',
-  'serpar2'
+  'serpar2',
+  '<display name>'
 ];

@@ -36,6 +36,14 @@ describe('task', function(){
     done();
   });
 
+  it('should register an anonymous function by displayName property', function(done){
+    anon.displayName = '<display name>';
+    taker.task(anon);
+    expect(taker.task('<display name>')).to.equal(anon);
+    delete anon.displayName;
+    done();
+  });
+
   it('should throw on register an anonymous function without string name', function(done){
     function noName(){
       taker.task(anon);
