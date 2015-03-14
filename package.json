@@ -3,7 +3,9 @@
   "version": "0.4.0",
   "description": "Task registry that allows composition through series/parallel methods.",
   "author": "Blaine Bublitz <blaine@iceddev.com> (http://iceddev.com/)",
-  "contributors": [],
+  "contributors": [
+    "Damien Lebrun <dinoboff@hotmail.com>"
+  ],
   "repository": "phated/undertaker",
   "license": "MIT",
   "engines": {
