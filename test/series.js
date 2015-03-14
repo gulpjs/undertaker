@@ -90,10 +90,13 @@ describe('series', function(){
   });
 
   it('should process all functions if settle flag is true', function(done){
+    taker.on('error', function(){
+      // to keep the test from catching the emitted errors
+    });
     taker._settle = true;
-    taker.series('test1', 'error', 'test3')(function(err, results){
-      expect(err[0]).to.be.an.instanceof(Error);
-      expect(results).to.deep.equal([1, 3]);
+    taker.series(taker.series('test1', 'error'), 'test3')(function(err, results){
+      expect(err[0][0]).to.be.an.instanceof(Error);
+      expect(results).to.deep.equal([3]);
       done();
     });
   });
