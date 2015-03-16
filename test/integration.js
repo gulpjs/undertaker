@@ -7,6 +7,8 @@ var describe = lab.describe;
 var it = lab.it;
 var beforeEach = lab.beforeEach;
 
+var fs = require('fs');
+var path = require('path');
 var vinyl = require('vinyl-fs');
 var jshint = require('gulp-jshint');
 var spawn = require('child_process').spawn;
@@ -112,21 +114,45 @@ describe('integrations', function() {
     });
   });
 
-  it('can use lastRun with vinyl.src `since` option', function(done){
-    taker.task('test', function () {
-      return vinyl.src('./fixtures/test.js', {cwd: __dirname })
+  it('can use lastRun with vinyl.src `since` option', function(done) {
+    var count = 0;
+
+    taker.on('start', function(e) {
+      console.log('task ' + e.name + ' started at ' + new Date(e.time).toISOString());
+    });
+
+    function setup() {
+      return vinyl.src('./fixtures/test*.js', {cwd: __dirname})
+        .pipe(vinyl.dest('./fixtures/tmp', {cwd: __dirname}));
+    }
+
+    // some built
+    taker.task('build', function() {
+      return vinyl.src('./fixtures/tmp/*.js', {cwd: __dirname})
         .pipe(vinyl.dest('./fixtures/out', {cwd: __dirname}));
     });
 
-    taker.task('test2', function () {
-      return vinyl.src('./fixtures/out/*.js', {cwd: __dirname, since: taker.lastRun('test') })
-        .pipe(through.obj(function(file, enc, cb){
-          expect(file).to.not.exist();
+    function userWait(cd) {
+      setTimeout(cd, 1100);
+    }
+
+    function userEdit(cb) {
+      fs.appendFile(path.join(__dirname, './fixtures/tmp/testMore.js'), ' ', cb);
+    }
+
+    function countEditedFiles() {
+      return vinyl.src('./fixtures/tmp/*.js', {cwd: __dirname, since: taker.lastRun('build')})
+        .pipe(through.obj(function(file, enc, cb) {
+          console.log('counting ' + file.path);
+          console.log('mtime ' + file.stat.mtime.toISOString());
+          count++;
           cb();
-        }))
-        .pipe(vinyl.dest('./fixtures/out', {cwd: __dirname}));
-    });
+        }));
+    }
 
-    taker.series('test', 'test2')(done);
+    taker.series(setup, 'build', userWait, userEdit, countEditedFiles, function(cb) {
+      expect(count).to.be.equal(1);
+      cb();
+    })(done);
   });
 });
