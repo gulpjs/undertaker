@@ -6,22 +6,62 @@ var expect = require('code').expect;
 var describe = lab.describe;
 var it = lab.it;
 var beforeEach = lab.beforeEach;
+var afterEach = lab.afterEach;
 
 var Undertaker = require('../');
+var lastRunLib = require('../lib/last-run');
 
 function fn(done){
   done();
 }
 
 describe('lastRun', function(){
-
-  var taker;
+  var taker, defaultResolution = process.env.UNDERTAKER_TIME_RESOLUTION;
 
   beforeEach(function(done){
+    process.env.UNDERTAKER_TIME_RESOLUTION = '0';
     taker = new Undertaker();
     taker.task('test1', fn);
     taker.task('test2', fn);
     done();
+  });
+
+  afterEach(function(done) {
+    process.env.UNDERTAKER_TIME_RESOLUTION = defaultResolution;
+    done();
+  });
+
+  describe('defaultResolution', function() {
+    var major = lastRunLib.nodeVersion.major;
+    var minor = lastRunLib.nodeVersion.minor;
+
+    afterEach(function(done) {
+      lastRunLib.nodeVersion.major = major;
+      lastRunLib.nodeVersion.minor = minor;
+      done();
+    });
+
+    it('should set default resolution to 1000 on node v0.10', function(done) {
+      lastRunLib.nodeVersion.major = 0;
+      lastRunLib.nodeVersion.minor = 10;
+      expect(lastRunLib.defaultResolution()).to.equal(1000);
+      done();
+    });
+
+    it('should set default resolution to 0 on node v0.11', function(done) {
+      lastRunLib.nodeVersion.major = 0;
+      lastRunLib.nodeVersion.minor = 11;
+      expect(lastRunLib.defaultResolution()).to.equal(0);
+      done();
+    });
+
+    it('should set default resolution to 0 on iojs v1.5', function(done) {
+      lastRunLib.nodeVersion.major = 1;
+      lastRunLib.nodeVersion.minor = 1;
+      expect(lastRunLib.defaultResolution()).to.equal(0);
+      done();
+    });
+
   });
 
   it('should record tasks time execution', function(done){
@@ -52,7 +92,18 @@ describe('lastRun', function(){
     taker.emit('start', {uid: 1, name: 'test1', time: since});
     taker.emit('stop', {uid: 1, name: 'test1', time: since + 1});
 
-    expect(taker.lastRun('test1')).to.be.equal(since);
+    expect(taker.lastRun('test1')).to.equal(since);
+    done();
+  });
+
+  it('should give time with 1s resolution', function(done){
+    var since = 1426000000111;
+    var expected = 1426000000000;
+
+    taker.emit('start', {uid: 1, name: 'test1', time: since});
+    taker.emit('stop', {uid: 1, name: 'test1', time: since + 1});
+
+    expect(taker.lastRun('test1', 1000)).to.equal(expected);
     done();
   });
 
@@ -74,7 +125,7 @@ describe('lastRun', function(){
     taker.emit('start', {uid: 1, name: 'test1', time: since + 2});
     taker.emit('error', {uid: 1, name: 'test1'});
 
-    expect(taker.lastRun('test1')).to.be.equal(since);
+    expect(taker.lastRun('test1')).to.equal(since);
     done();
   });
 
@@ -86,7 +137,7 @@ describe('lastRun', function(){
     taker.emit('stop', {uid: 2, name: 'test1', time: since + 1});
     taker.emit('stop', {uid: 1, name: 'test1', time: since + 2});
 
-    expect(taker.lastRun('test1')).to.be.equal(since);
+    expect(taker.lastRun('test1')).to.equal(since);
     done();
   });
 
@@ -98,7 +149,7 @@ describe('lastRun', function(){
     taker.emit('stop', {uid: 2, name: 'test1', time: since + 1});
     taker.emit('error', {uid: 1, name: 'test1'});
 
-    expect(taker.lastRun('test1')).to.be.equal(since);
+    expect(taker.lastRun('test1')).to.equal(since);
     done();
   });
 
@@ -110,7 +161,7 @@ describe('lastRun', function(){
     taker.emit('error', {uid: 1, name: 'test1'});
     taker.emit('stop', {uid: 2, name: 'test1', time: since + 1});
 
-    expect(taker.lastRun('test1')).to.be.equal(since);
+    expect(taker.lastRun('test1')).to.equal(since);
     done();
   });
 
@@ -132,11 +183,11 @@ describe('lastRun', function(){
 
     taker.emit('start', {uid: 4, name: 'test1', time: since});
     taker.emit('stop', {uid: 4, name: 'test1', time: since + 1});
-    expect(taker.lastRun('test1')).to.be.equal(since);
+    expect(taker.lastRun('test1')).to.equal(since);
 
     // stop event without matching start event
     taker.emit('stop', {uid: 5, name: 'test1', time: since + 2});
-    expect(taker.lastRun('test1')).to.be.equal(since);
+    expect(taker.lastRun('test1')).to.equal(since);
 
     done();
   });

@@ -117,10 +117,6 @@ describe('integrations', function() {
   it('can use lastRun with vinyl.src `since` option', function(done) {
     var count = 0;
 
-    taker.on('start', function(e) {
-      console.log('task ' + e.name + ' started at ' + new Date(e.time).toISOString());
-    });
-
     function setup() {
       return vinyl.src('./fixtures/test*.js', {cwd: __dirname})
         .pipe(vinyl.dest('./fixtures/tmp', {cwd: __dirname}));
@@ -143,8 +139,6 @@ describe('integrations', function() {
     function countEditedFiles() {
       return vinyl.src('./fixtures/tmp/*.js', {cwd: __dirname, since: taker.lastRun('build')})
         .pipe(through.obj(function(file, enc, cb) {
-          console.log('counting ' + file.path);
-          console.log('mtime ' + file.stat.mtime.toISOString());
           count++;
           cb();
         }));
