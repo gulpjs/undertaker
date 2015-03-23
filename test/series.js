@@ -100,4 +100,18 @@ describe('series', function(){
       done();
     });
   });
+
+  it('should generate task id', function(done) {
+    var uid = {};
+    var inner = taker.series(fn1, 'test2');
+
+    taker.on('start', function(e){
+      uid[e.taskId] = e.name;
+    });
+
+    taker.series(inner, inner)(function(){
+      expect(Object.keys(uid)).to.have.length(3);
+      done();
+    });
+  });
 });
