@@ -53,34 +53,25 @@ To use a custom registry, pass the custom registry's constructor function when
 instantiating a new `Undertaker` instance. This will use the custom constructor
 to create the registry for this instance.
 
-### `get(taskName)` => Function
+### `task([taskName,] fn)` => [Function]
 
-Takes a string (`taskName`) representing the name of a register task and
-returns the registered function.
+Both a `getter` and `setter` for tasks.
 
-### `set(taskName, fn)`
+If a string (`taskName`) is given as the only argument, it behaves as a `getter`
+and returns the registered function.
 
-Takes a string (`taskName`) and a function (`fn`) to register as a task.
-The `fn` gets registered in the registry by the `taskName`.
+If a function (`fn`) and optionally a string (`taskName`) is given, it behaves as
+a `setter` and will register the task by the `taskName`.  If `taskName` is not
+specified, the `name` or `displayName` property of the function is used as the `taskName`.
 
-If you attempt to register the same function with different names, it will
-only be registered by the last name attempted.
+__Note: If you attempt to register the same function with different names, it will
+only be registered by the last name attempted.__
 
 Will throw if:
 
-* `taskName` is missing or not a string
-* `fn` is missing or not a function
-
-### `task([taskName,] fn)` => [Function]
-
-An alias for `get` and `set`. If a string (`taskName`) is given as the only
-argument, the `get` method will be called. If a function (`fn`) and optionally
-a string (`taskName`) is given, the `set` method will be called.
-
-This function allows you to pass a named function as the only argument and its
-name will be turned into the `taskName` when the `set` method is called.
-
-Will throw in the same ways mentioned in `get` and `set`.
+* `taskName` is missing or not a string when behaving as a `getter` or
+is missing and function is anonymous when behaving as a `setter`.
+* `fn` is missing or not a function when behaving as a `setter`.
 
 ### `series(taskName || fn...)` => Function
 
