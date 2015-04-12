@@ -56,8 +56,8 @@ describe('registry', function(){
       var customRegistry = new DefaultRegistry();
       taker.registry(customRegistry);
 
-      expect(taker.get('clean')).to.be.a.function();
-      expect(taker.get('serve')).to.be.a.function();
+      expect(taker.task('clean')).to.be.a.function();
+      expect(taker.task('serve')).to.be.a.function();
       done();
     });
 
@@ -65,11 +65,11 @@ describe('registry', function(){
       var taker = new Undertaker();
       taker.registry(new CommonRegistry());
 
-      expect(taker.get('clean')).to.be.a.function();
-      expect(taker.get('serve')).to.be.a.function();
+      expect(taker.task('clean')).to.be.a.function();
+      expect(taker.task('serve')).to.be.a.function();
 
       taker.registry(new MetadataRegistry());
-      taker.set('context', function(cb){
+      taker.task('context', function(cb){
         expect(this).to.deep.equal({ name: 'context' });
         cb();
         done();
@@ -77,9 +77,9 @@ describe('registry', function(){
 
       taker.registry(new DefaultRegistry());
 
-      expect(taker.get('clean')).to.be.a.function();
-      expect(taker.get('serve')).to.be.a.function();
-      expect(taker.get('context')).to.be.a.function();
+      expect(taker.task('clean')).to.be.a.function();
+      expect(taker.task('serve')).to.be.a.function();
+      expect(taker.task('context')).to.be.a.function();
 
       taker.series('context')();
     });
@@ -105,8 +105,8 @@ describe('registry', function(){
       var taker = new Undertaker(CommonRegistry);
       expect(taker.registry()).to.be.an.instanceof(CommonRegistry);
       expect(taker.registry()).to.be.an.instanceof(DefaultRegistry);
-      expect(taker.get('clean')).to.be.a.function();
-      expect(taker.get('serve')).to.be.a.function();
+      expect(taker.task('clean')).to.be.a.function();
+      expect(taker.task('serve')).to.be.a.function();
       done();
     });
 
