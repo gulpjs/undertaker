@@ -25,8 +25,6 @@ function Undertaker(Registry){
   this._settle = (process.env.UNDERTAKER_SETTLE === 'true');
 
   validateRegistry(this._registry);
-
-  lastRun.init(this);
 }
 
 inherits(Undertaker, EventEmitter);
@@ -41,7 +39,7 @@ Undertaker.prototype.task = task;
 
 Undertaker.prototype.series = series;
 
-Undertaker.prototype.lastRun = lastRun.get;
+Undertaker.prototype.lastRun = lastRun;
 
 Undertaker.prototype.parallel = parallel;
 

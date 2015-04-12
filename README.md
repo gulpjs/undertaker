@@ -63,6 +63,9 @@ returns the registered function.
 Takes a string (`taskName`) and a function (`fn`) to register as a task.
 The `fn` gets registered in the registry by the `taskName`.
 
+If you attempt to register the same function with different names, it will
+only be registered by the last name attempted.
+
 Will throw if:
 
 * `taskName` is missing or not a string
@@ -121,23 +124,30 @@ property that can be used to determine if the node is a `task` or `function`.
 
 * `deep` - if the whole tree should be returned (Default: `false`)
 
-### `lastRun(taskName, [timeResolution])` => [Timestamp]
+### `lastRun(task, [timeResolution])` => [Timestamp]
 
-Takes a string (`taskName`) and returns a timestamp of the last time the task 
+Takes a string or function (`task`) and returns a timestamp of the last time the task
 was run successfully. The time will be the time the task started.
 
 Returns `undefined` if the task has not been run.
 
-The timestamp is always given in millisecond but the time resolution can be 
-reduced (rounded down). The use case is to be able to compare a build time 
-to a file time attribute. On node v0.10 or with file system like HFS or FAT, 
+If a task errors, the result of `lastRun` will be undefined because the task
+should probably be re-run from scratch to get into a good state again.
+
+The timestamp is always given in millisecond but the time resolution can be
+reduced (rounded down). The use case is to be able to compare a build time
+to a file time attribute. On node v0.10 or with file system like HFS or FAT,
 `fs.stat` time attributes like `mtime` precision is one second.
 
-Assuming `undertakerInst.lastRun('someTask')` returns `1426000001111`, 
+Assuming `undertakerInst.lastRun('someTask')` returns `1426000001111`,
 `undertakerInst.lastRun('someTask', 1000)` returns `1426000001000`.
 
 The default time resolution is `1000` on node v0.10, `0` on node 0.11+ and iojs.
 it can be overwritten using `UNDERTAKER_TIME_RESOLUTION` environment variable.
+
+__Note: if you use a custom registry that modifies the function (such as `.bind`),
+you will need to use the string for `task` instead of a function because we have no
+way of looking up the function that was altered.__
 
 ## Custom Registries
 

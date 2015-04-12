@@ -71,7 +71,7 @@ describe('series', function(){
 
   it('should stop processing on error', function(done){
     taker.on('error', function(){
-      // to keep the process from crashing
+      // to keep the test from catching the emitted errors
     });
     taker.series('test1', 'error', 'test3')(function(err, results){
       expect(err).to.be.an.instanceof(Error);
@@ -100,4 +100,5 @@ describe('series', function(){
       done();
     });
   });
+
 });
