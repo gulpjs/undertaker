@@ -71,7 +71,7 @@ describe('series', function(){
 
   it('should stop processing on error', function(done){
     taker.on('error', function(){
-      // to keep the process from crashing
+      // to keep the test from catching the emitted errors
     });
     taker.series('test1', 'error', 'test3')(function(err, results){
       expect(err).to.be.an.instanceof(Error);
@@ -101,17 +101,4 @@ describe('series', function(){
     });
   });
 
-  it('should generate task id', function(done) {
-    var uid = {};
-    var inner = taker.series(fn1, 'test2');
-
-    taker.on('start', function(e){
-      uid[e.taskId] = e.name;
-    });
-
-    taker.series(inner, inner)(function(){
-      expect(Object.keys(uid)).to.have.length(3);
-      done();
-    });
-  });
 });

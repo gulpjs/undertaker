@@ -71,7 +71,7 @@ describe('parallel', function(){
 
   it('should stop processing on error', function(done){
     taker.on('error', function(){
-      // to keep the process from crashing
+      // to keep the test from catching the emitted errors
     });
     taker.parallel('test1', 'error', 'test3')(function(err, results){
       expect(err).to.be.an.instanceof(Error);
@@ -97,20 +97,6 @@ describe('parallel', function(){
     taker.parallel(taker.parallel('test1', 'error'), 'test3')(function(err, results){
       expect(err[0][0]).to.be.an.instanceof(Error);
       expect(results).to.deep.equal([3]);
-      done();
-    });
-  });
-
-  it('should generate task id', function(done) {
-    var uid = {};
-    var inner = taker.parallel(fn1, 'test2');
-
-    taker.on('start', function(e){
-      uid[e.taskId] = e.name;
-    });
-
-    taker.parallel(inner, inner)(function(){
-      expect(Object.keys(uid)).to.have.length(3);
       done();
     });
   });
