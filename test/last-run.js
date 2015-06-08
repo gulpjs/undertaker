@@ -39,6 +39,16 @@ describe('lastRun', function() {
     done();
   });
 
+  it('should only record time when task has completed', function(done) {
+    var ts;
+    var test = function(cb) { ts = taker.lastRun('test'); cb(); };
+    taker.task('test', test);
+    taker.parallel('test')(function(err) {
+      expect(ts).to.be.undefined();
+      done(err);
+    });
+  });
+
   it('should record tasks time execution', function(done) {
     var since = Date.now();
     taker.parallel('test1')(function(err) {
