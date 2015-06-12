@@ -13,18 +13,16 @@ var parallel = require('./lib/parallel');
 var registry = require('./lib/registry');
 var _getTask = require('./lib/get-task');
 var _setTask = require('./lib/set-task');
-var validateRegistry = require('./lib/helpers/validateRegistry');
 
-function Undertaker(Registry){
+function Undertaker(customRegistry){
   EventEmitter.call(this);
 
-  Registry = Registry || DefaultRegistry;
-
-  this._registry = new Registry();
+  this._registry = new DefaultRegistry();
+  if(customRegistry){
+    this.registry(customRegistry);
+  }
 
   this._settle = (process.env.UNDERTAKER_SETTLE === 'true');
-
-  validateRegistry(this._registry);
 }
 
 inherits(Undertaker, EventEmitter);

@@ -15,6 +15,7 @@ var MetadataRegistry = require('undertaker-task-metadata');
 function noop(){}
 
 function CustomRegistry(){}
+CustomRegistry.prototype.init = noop;
 CustomRegistry.prototype.get = noop;
 CustomRegistry.prototype.set = noop;
 CustomRegistry.prototype.tasks = noop;
@@ -52,7 +53,7 @@ describe('registry', function(){
     });
 
     it('should transfer all tasks from old registry to new', function(done){
-      var taker = new Undertaker(CommonRegistry);
+      var taker = new Undertaker(new CommonRegistry());
       var customRegistry = new DefaultRegistry();
       taker.registry(customRegistry);
 
@@ -83,12 +84,40 @@ describe('registry', function(){
 
       taker.series('context')();
     });
+
+    it('throws with a descriptive method when constructor is passed', function(done){
+      var taker = new Undertaker();
+
+      function ctor(){
+        taker.registry(CommonRegistry);
+      }
+
+      expect(ctor).to.throw(Error, 'Custom registries must be instantiated, but it looks like you passed a constructor');
+      done();
+    });
+
+    it('calls into the init function after tasks are transferred', function(done){
+      var taker = new Undertaker(new CommonRegistry());
+
+      var ogInit = DefaultRegistry.prototype.init;
+
+      DefaultRegistry.prototype.init = function(inst){
+        expect(inst).to.equal(taker);
+        expect(inst.task('clean')).to.be.a.function();
+        expect(inst.task('serve')).to.be.a.function();
+      };
+
+      taker.registry(new DefaultRegistry());
+
+      DefaultRegistry.prototype.init = ogInit;
+      done();
+    });
   });
 
   describe('constructor', function(){
 
-    it('should take a custom registry constructor on instantiation', function(done){
-      var taker = new Undertaker(CustomRegistry);
+    it('should take a custom registry on instantiation', function(done){
+      var taker = new Undertaker(new CustomRegistry());
       expect(taker.registry()).to.be.an.instanceof(CustomRegistry);
       expect(taker.registry()).to.not.be.an.instanceof(DefaultRegistry);
       done();
@@ -102,7 +131,7 @@ describe('registry', function(){
     });
 
     it('should take a registry that pre-defines tasks', function(done){
-      var taker = new Undertaker(CommonRegistry);
+      var taker = new Undertaker(new CommonRegistry());
       expect(taker.registry()).to.be.an.instanceof(CommonRegistry);
       expect(taker.registry()).to.be.an.instanceof(DefaultRegistry);
       expect(taker.task('clean')).to.be.a.function();
@@ -115,27 +144,34 @@ describe('registry', function(){
       var taker;
 
       function noGet(){
-        taker = new Undertaker(InvalidRegistry);
+        taker = new Undertaker(new InvalidRegistry());
       }
 
       expect(noGet).to.throw(Error, 'Custom registry must have `get` function');
       InvalidRegistry.prototype.get = noop;
 
       function noSet(){
-        taker = new Undertaker(InvalidRegistry);
+        taker = new Undertaker(new InvalidRegistry());
       }
 
       expect(noSet).to.throw(Error, 'Custom registry must have `set` function');
       InvalidRegistry.prototype.set = noop;
 
+      function noInit(){
+        taker = new Undertaker(new InvalidRegistry());
+      }
+
+      expect(noInit).to.throw(Error, 'Custom registry must have `init` function');
+      InvalidRegistry.prototype.init = noop;
+
       function noTasks(){
-        taker = new Undertaker(InvalidRegistry);
+        taker = new Undertaker(new InvalidRegistry());
       }
 
       expect(noTasks).to.throw(Error, 'Custom registry must have `tasks` function');
       InvalidRegistry.prototype.tasks = noop;
 
-      taker = new Undertaker(InvalidRegistry);
+      taker = new Undertaker(new InvalidRegistry());
       done();
     });
   });
