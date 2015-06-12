@@ -147,6 +147,7 @@ or add custom functionality to your registries.
 
 A registry's prototype should define:
 
+- `init(taker)`: receives the undertaker instance to set pre-defined tasks using the `task(taskName, fn)` method.
 - `get(taskName)`: returns the task with that name
    or `undefined` if no task is registered with that name.
 - `set(taskName, fn)`: add task to the registry. If `set` modifies a task, it should return the new task.
@@ -171,8 +172,11 @@ module.exports = MyRegistry;
 
 ### Sharing tasks
 
-To share common tasks with all your projects, you can set a registry with those
-tasks defined inside the constructor. For example you might want to share a `clean` task:
+To share common tasks with all your projects, you can expose an `init` method on the registry
+prototype and it will receive the Undertaker instance as the only argument. You can then use
+`undertaker.task(name, fn)` to register pre-defined tasks.
+
+For example you might want to share a `clean` task:
 
 ```javascript
 var fs = require('fs');
@@ -181,22 +185,28 @@ var util = require('util');
 var DefaultRegistry = require('undertaker-registry');
 var del = require('del');
 
-function CommonRegistry(){
+function CommonRegistry(opts){
   DefaultRegistry.call(this);
 
-  var buildDir = './build';
-  var exists = fs.existsSync(buildDir);
+  opts = opts || {};
 
-  if(exists){
-    throw new Error('Cannot initialize common tasks. `build/` directory exists.');
-  }
-
-  this.set('clean', function(cb){
-    del([buildDir], cb);
-  });
+  this.buildDir = opts.buildDir || './build';
 }
 
 util.inherits(CommonRegistry, DefaultRegistry);
+
+CommonRegistry.prototype.init = function(takerInst){
+  var buildDir = this.buildDir;
+  var exists = fs.existsSync(buildDir);
+
+  if(exists){
+    throw new Error('Cannot initialize common tasks. ' + buildDir + ' directory exists.');
+  }
+
+  takerInst.task('clean', function(cb){
+    del([buildDir], cb);
+  });
+}
 
 module.exports = CommonRegistry;
 ```
@@ -206,7 +216,7 @@ Then to use it in a project:
 var Undertaker = require('undertaker');
 var CommonRegistry = require('myorg-common-tasks');
 
-var taker = new Undertaker(CommonRegistry);
+var taker = new Undertaker(CommonRegistry({ buildDir: '/dist' }));
 
 taker.task('build', taker.series('clean', function build(cb) {
   // do things
