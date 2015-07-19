@@ -75,4 +75,12 @@ describe('task', function(){
     expect(taker.task('test1')).to.equal(noop);
     done();
   });
+
+  it('should prefer displayName instead of name when both properties are defined', function(done) {
+    function fn() {}
+    fn.displayName = 'test1';
+    taker.task(fn);
+    expect(taker.task('test1')).to.equal(fn);
+    done();
+  });
 });
