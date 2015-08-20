@@ -13,6 +13,7 @@ var simple = require('./fixtures/taskTree/simple');
 var singleLevel = require('./fixtures/taskTree/singleLevel');
 var doubleLevel = require('./fixtures/taskTree/doubleLevel');
 var tripleLevel = require('./fixtures/taskTree/tripleLevel');
+var foldedTasks = require('./fixtures/taskTree/foldedTasks');
 
 function noop(done){ done(); }
 
@@ -59,7 +60,7 @@ describe('tree', function(){
     done();
   });
 
-  it('should form a 2 level nested tree', function(done){
+  it('should form tripleLevela 2 level nested tree', function(done){
     taker.task('fn1', function(cb){ cb(); });
     taker.task('fn2', function(cb){ cb(); });
     taker.task('fn3', taker.series('fn1', 'fn2'));
@@ -84,4 +85,28 @@ describe('tree', function(){
     done();
   });
 
+  it('should fold same tasks into array (shallow test)', function(done) {
+    var sampleFunc = function(cb) {cb();};
+    taker.task('fn1', sampleFunc);
+    taker.task('fn2', sampleFunc);
+    taker.task('fn3', function(cb) {cb();});
+    taker.task('fn4', sampleFunc);
+
+    var tree = taker.tree({ deep: false });
+    expect(tree).to.deep.equal([['fn1', 'fn2', 'fn4'], 'fn3']);
+
+    done();
+  });
+
+  it('should fold same tasks into array (deep test)', function(done) {
+    var sampleFunc = function(cb) {cb();};
+    taker.task('fn1', sampleFunc);
+    taker.task('fn2', sampleFunc);
+    taker.task('fn3', function(cb) {cb();});
+    taker.task('fn4', sampleFunc);
+
+    var tree = taker.tree({ deep: true });
+    expect(tree).to.deep.equal(foldedTasks);
+    done();
+  });
 });
