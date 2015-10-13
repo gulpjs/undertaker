@@ -153,6 +153,9 @@ A registry's prototype should define:
 - `set(taskName, fn)`: add task to the registry. If `set` modifies a task, it should return the new task.
 - `tasks()`: returns an object listing all tasks in the registry.
 
+You should not call these functions yourself; leave that to Undertaker, so it can
+keep its metadata consistent.
+
 The easiest way to create a custom registry is to inherit from
 [undertaker-registry](https://www.npmjs.com/package/undertaker-registry):
 
@@ -229,7 +232,8 @@ taker.task('build', taker.series('clean', function build(cb) {
 By controlling how tasks are added to the registry, you can decorate them.
 
 For example if you wanted all tasks to share some data,  you can use a custom registry
-to bind them to that data:
+to bind them to that data. Be sure to return the altered task, as per the description
+of registry methods above:
 
 ```javascript
 var util = require('util');
@@ -249,6 +253,7 @@ function ConfigRegistry(config){
 util.inherits(ConfigRegistry, DefaultRegistry);
 
 ConfigRegistry.prototype.set = function set(name, fn) {
+  // The `DefaultRegistry` uses `this._tasks` for storage.
   var task = this._tasks[name] = fn.bind(this.config);
   return task;
 };
