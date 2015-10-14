@@ -199,7 +199,6 @@ function CommonRegistry(opts){
 util.inherits(CommonRegistry, DefaultRegistry);
 
 CommonRegistry.prototype.init = function(takerInst){
-  DefaultRegistry.prototype.init.call(this, takerInst);
   var buildDir = this.buildDir;
   var exists = fs.existsSync(buildDir);
 
@@ -254,8 +253,9 @@ function ConfigRegistry(config){
 util.inherits(ConfigRegistry, DefaultRegistry);
 
 ConfigRegistry.prototype.set = function set(name, fn) {
-  fn = fn.bind(this.config);
-  return DefaultRegistry.prototype.set.call(this, name, fn) || fn;
+  // The `DefaultRegistry` uses `this._tasks` for storage.
+  var task = this._tasks[name] = fn.bind(this.config);
+  return task;
 };
 
 var taker = new Undertaker();
