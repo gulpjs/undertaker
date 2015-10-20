@@ -18,7 +18,7 @@
     "lib"
   ],
   "scripts": {
-    "test": "lab -cvL"
+    "test": "lab -cvL --ignore store@sparkles"
   },
   "dependencies": {
     "bach": "^0.4.1",
