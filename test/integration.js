@@ -15,6 +15,7 @@ var spawn = require('child_process').spawn;
 var once = require('once');
 var aOnce = require('async-once');
 var del = require('del');
+var promisedDel = require('promised-del');
 var through = require('through2');
 
 var Undertaker = require('../');
@@ -67,7 +68,7 @@ describe('integrations', function() {
 
     taker.task('clean', once(function() {
       count++;
-      return del(['./fixtures/some-build.txt'], {cwd: __dirname});
+      return promisedDel(['./fixtures/some-build.txt'], {cwd: __dirname});
     }));
 
     taker.task('build-this', taker.series('clean', function(cb){
