@@ -13,6 +13,8 @@ var simple = require('./fixtures/taskTree/simple');
 var singleLevel = require('./fixtures/taskTree/singleLevel');
 var doubleLevel = require('./fixtures/taskTree/doubleLevel');
 var tripleLevel = require('./fixtures/taskTree/tripleLevel');
+var aliasSimple = require('./fixtures/taskTree/aliasSimple');
+var aliasNested = require('./fixtures/taskTree/aliasNested');
 
 function noop(done){ done(); }
 
@@ -81,6 +83,39 @@ describe('tree', function(){
     var tree = taker.tree({ deep: true });
 
     expect(tree).to.deep.equal(tripleLevel);
+    done();
+  });
+
+  it('should use the proper labels for aliased tasks (simple)', function(done) {
+    var anon = function(cb) {
+      cb();
+    };
+    taker.task(noop);
+    taker.task('fn1', noop);
+    taker.task('fn2', taker.task('noop'));
+    taker.task('fn3', anon);
+    taker.task('fn4', taker.task('fn3'));
+
+    var tree = taker.tree({ deep: true });
+
+    expect(tree).to.deep.equal(aliasSimple);
+    done();
+  });
+
+  it('should use the proper labels for aliased tasks (nested)', function(done) {
+    var anon = function(cb) {
+      cb();
+    };
+    taker.task(noop);
+    taker.task('fn1', noop);
+    taker.task('fn2', taker.task('noop'));
+    taker.task('fn3', anon);
+    taker.task('ser', taker.series(noop, anon, 'fn1', 'fn2', 'fn3'));
+    taker.task('par', taker.parallel(noop, anon, 'fn1', 'fn2', 'fn3'));
+
+    var tree = taker.tree({ deep: true });
+
+    expect(tree).to.deep.equal(aliasNested);
     done();
   });
 
