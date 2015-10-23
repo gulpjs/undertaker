@@ -83,4 +83,71 @@ describe('task', function(){
     expect(taker.task('test1')).to.equal(fn);
     done();
   });
+
+  it('should allow different tasks to refer to the same function', function(done) {
+    function fn() {}
+    taker.task('foo', fn);
+    taker.task('bar', fn);
+    expect(taker.task('foo' )).to.equal(taker.task('bar'));
+    done();
+  });
+
+  it('should allow using aliased tasks in composite tasks', function(done) {
+    var count = 0;
+    function fn(cb) {
+      count++;
+      cb();
+    }
+
+    taker.task('foo', fn);
+    taker.task('bar', fn);
+
+    taker.series('foo', 'bar', function(cb) {
+      expect(count).to.equal(2);
+      cb();
+    });
+
+    taker.parallel('foo', 'bar', function(cb) {
+      setTimeout(function(){
+        expect(count).to.equal(4);
+        cb();
+      }, 500);
+    });
+
+    done();
+  });
+
+  it('should allow composite tasks tasks to be aliased', function(done) {
+    var count = 0;
+    function fn1(cb) {
+      count += 1;
+      cb();
+    }
+    function fn2(cb) {
+      count += 2;
+      cb();
+    }
+
+    taker.task('ser', taker.series(fn1, fn2));
+    taker.task('foo', taker.task('ser'));
+
+    taker.task('par', taker.parallel(fn1, fn2));
+    taker.task('bar', taker.task('par'));
+
+    taker.series('foo', function(cb) {
+      expect(count).to.equal(3);
+      cb();
+    });
+
+    taker.series('bar', function(cb) {
+      setTimeout(function(){
+        expect(count).to.equal(6);
+        cb();
+      }, 500);
+
+    });
+
+    done();
+  });
+
 });
