@@ -29,25 +29,25 @@ describe('integrations', function() {
   });
 
   it('should handle vinyl streams', function(done) {
-    taker.task('test', function () {
-      return vinyl.src('./fixtures/test.js', {cwd: __dirname})
-        .pipe(vinyl.dest('./fixtures/out', {cwd: __dirname}));
+    taker.task('test', function() {
+      return vinyl.src('./fixtures/test.js', { cwd: __dirname })
+        .pipe(vinyl.dest('./fixtures/out', { cwd: __dirname }));
     });
 
     taker.parallel('test')(done);
   });
 
   it('should exhaust vinyl streams', function(done) {
-    taker.task('test', function () {
-      return vinyl.src('./fixtures/test.js', {cwd: __dirname});
+    taker.task('test', function() {
+      return vinyl.src('./fixtures/test.js', { cwd: __dirname });
     });
 
     taker.parallel('test')(done);
   });
 
   it('should lints all piped files', function(done) {
-    taker.task('test', function () {
-      return vinyl.src('./fixtures/test.js', {cwd: __dirname})
+    taker.task('test', function() {
+      return vinyl.src('./fixtures/test.js', { cwd: __dirname })
         .pipe(jshint());
     });
 
@@ -55,7 +55,7 @@ describe('integrations', function() {
   });
 
   it('should handle a child process return', function(done) {
-    taker.task('test', function () {
+    taker.task('test', function() {
       return spawn('ls', ['-lh', __dirname]);
     });
 
@@ -67,13 +67,13 @@ describe('integrations', function() {
 
     taker.task('clean', once(function() {
       count++;
-      return del(['./fixtures/some-build.txt'], {cwd: __dirname});
+      return del(['./fixtures/some-build.txt'], { cwd: __dirname });
     }));
 
-    taker.task('build-this', taker.series('clean', function(cb){
+    taker.task('build-this', taker.series('clean', function(cb) {
       cb();
     }));
-    taker.task('build-that', taker.series('clean', function(cb){
+    taker.task('build-that', taker.series('clean', function(cb) {
       cb();
     }));
     taker.task('build', taker.series(
@@ -81,7 +81,7 @@ describe('integrations', function() {
       taker.parallel(['build-this', 'build-that'])
     ));
 
-    taker.parallel('build')(function(err){
+    taker.parallel('build')(function(err) {
       expect(count).to.equal(1);
       done(err);
     });
@@ -93,13 +93,13 @@ describe('integrations', function() {
     taker.task('clean', aOnce(function(cb) {
       cb();
       count++;
-      del(['./fixtures/some-build.txt'], {cwd: __dirname}, cb);
+      del(['./fixtures/some-build.txt'], { cwd: __dirname }, cb);
     }));
 
-    taker.task('build-this', taker.series('clean', function(cb){
+    taker.task('build-this', taker.series('clean', function(cb) {
       cb();
     }));
-    taker.task('build-that', taker.series('clean', function(cb){
+    taker.task('build-that', taker.series('clean', function(cb) {
       cb();
     }));
     taker.task('build', taker.series(
@@ -107,7 +107,7 @@ describe('integrations', function() {
       taker.parallel(['build-this', 'build-that'])
     ));
 
-    taker.parallel('build')(function(err){
+    taker.parallel('build')(function(err) {
       expect(count).to.equal(1);
       done(err);
     });
@@ -117,14 +117,14 @@ describe('integrations', function() {
     var count = 0;
 
     function setup() {
-      return vinyl.src('./fixtures/test*.js', {cwd: __dirname})
-        .pipe(vinyl.dest('./fixtures/tmp', {cwd: __dirname}));
+      return vinyl.src('./fixtures/test*.js', { cwd: __dirname })
+        .pipe(vinyl.dest('./fixtures/tmp', { cwd: __dirname }));
     }
 
-    // some built
+    // Some built
     taker.task('build', function() {
-      return vinyl.src('./fixtures/tmp/*.js', {cwd: __dirname})
-        .pipe(vinyl.dest('./fixtures/out', {cwd: __dirname}));
+      return vinyl.src('./fixtures/tmp/*.js', { cwd: __dirname })
+        .pipe(vinyl.dest('./fixtures/out', { cwd: __dirname }));
     });
 
     function userWait(cd) {
@@ -136,7 +136,7 @@ describe('integrations', function() {
     }
 
     function countEditedFiles() {
-      return vinyl.src('./fixtures/tmp/*.js', {cwd: __dirname, since: taker.lastRun('build')})
+      return vinyl.src('./fixtures/tmp/*.js', { cwd: __dirname, since: taker.lastRun('build') })
         .pipe(through.obj(function(file, enc, cb) {
           count++;
           cb();

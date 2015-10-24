@@ -4,11 +4,11 @@ module.exports = [
   {
     label: 'fn1',
     type: 'task',
-    nodes: []
+    nodes: [],
   },
   {
     label: 'fn2',
     type: 'task',
-    nodes: []
-  }
+    nodes: [],
+  },
 ];

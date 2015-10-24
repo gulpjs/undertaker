@@ -12,16 +12,16 @@ module.exports = [
           {
             label: '<anonymous>',
             type: 'function',
-            nodes: []
+            nodes: [],
           },
           {
             label: 'noop',
             type: 'function',
-            nodes: []
-          }
-        ]
-      }
-    ]
+            nodes: [],
+          },
+        ],
+      },
+    ],
   },
   {
     label: 'fn2',
@@ -34,16 +34,16 @@ module.exports = [
           {
             label: '<anonymous>',
             type: 'function',
-            nodes: []
+            nodes: [],
           },
           {
             label: 'noop',
             type: 'function',
-            nodes: []
-          }
-        ]
-      }
-    ]
+            nodes: [],
+          },
+        ],
+      },
+    ],
   },
   {
     label: 'fn3',
@@ -64,16 +64,16 @@ module.exports = [
                   {
                     label: '<anonymous>',
                     type: 'function',
-                    nodes: []
+                    nodes: [],
                   },
                   {
                     label: 'noop',
                     type: 'function',
-                    nodes: []
-                  }
-                ]
-              }
-            ]
+                    nodes: [],
+                  },
+                ],
+              },
+            ],
           },
           {
             label: 'fn2',
@@ -86,19 +86,19 @@ module.exports = [
                   {
                     label: '<anonymous>',
                     type: 'function',
-                    nodes: []
+                    nodes: [],
                   },
                   {
                     label: 'noop',
                     type: 'function',
-                    nodes: []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
+                    nodes: [],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ];

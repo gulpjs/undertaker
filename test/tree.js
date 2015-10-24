@@ -14,25 +14,35 @@ var singleLevel = require('./fixtures/taskTree/singleLevel');
 var doubleLevel = require('./fixtures/taskTree/doubleLevel');
 var tripleLevel = require('./fixtures/taskTree/tripleLevel');
 
-function noop(done){ done(); }
+function noop(done) {
+  done();
+}
 
-describe('tree', function(){
+describe('tree', function() {
 
   var taker;
 
-  beforeEach(function(done){
+  beforeEach(function(done) {
     taker = new Undertaker();
     done();
   });
 
-  it('should return a simple tree by default', function(done){
-    taker.task('test1', function(cb){ cb(); });
-    taker.task('test2', function(cb){ cb(); });
-    taker.task('test3', function(cb){ cb(); });
-    taker.task('error', function(cb){ cb(); });
+  it('should return a simple tree by default', function(done) {
+    taker.task('test1', function(cb) {
+      cb();
+    });
+    taker.task('test2', function(cb) {
+      cb();
+    });
+    taker.task('test3', function(cb) {
+      cb();
+    });
+    taker.task('error', function(cb) {
+      cb();
+    });
 
     var ser = taker.series('test1', 'test2');
-    var anon = function(cb){
+    var anon = function(cb) {
       cb();
     };
     anon.displayName = '<display name>';
@@ -49,9 +59,13 @@ describe('tree', function(){
     done();
   });
 
-  it('should form a 1 level tree', function(done){
-    taker.task('fn1', function(cb){ cb(); });
-    taker.task('fn2', function(cb){ cb(); });
+  it('should form a 1 level tree', function(done) {
+    taker.task('fn1', function(cb) {
+      cb();
+    });
+    taker.task('fn2', function(cb) {
+      cb();
+    });
 
     var tree = taker.tree({ deep: true });
 
@@ -59,9 +73,13 @@ describe('tree', function(){
     done();
   });
 
-  it('should form a 2 level nested tree', function(done){
-    taker.task('fn1', function(cb){ cb(); });
-    taker.task('fn2', function(cb){ cb(); });
+  it('should form a 2 level nested tree', function(done) {
+    taker.task('fn1', function(cb) {
+      cb();
+    });
+    taker.task('fn2', function(cb) {
+      cb();
+    });
     taker.task('fn3', taker.series('fn1', 'fn2'));
 
     var tree = taker.tree({ deep: true });
@@ -70,8 +88,8 @@ describe('tree', function(){
     done();
   });
 
-  it('should form a 3 level nested tree', function(done){
-    var anon = function(cb){
+  it('should form a 3 level nested tree', function(done) {
+    var anon = function(cb) {
       cb();
     };
     taker.task('fn1', taker.parallel(anon, noop));

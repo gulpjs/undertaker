@@ -33,7 +33,7 @@
     "code": "^1.2.1",
     "del": "^2.0.2",
     "eslint": "1.7.3",
-    "eslint-config-gulp": "git://github.com/pdehaan/eslint-config-gulp.git#40751adca3c220dfd017093f827d0650a7568305",
+    "eslint-config-gulp": "2.0.0",
     "gulp-jshint": "^1.8.4",
     "jscs": "2.3.5",
     "jscs-preset-gulp": "1.0.0",
