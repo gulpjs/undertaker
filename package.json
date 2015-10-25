@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "lint": "eslint . && jscs *.js lib/ test/",
-    "test": "lab -cvL --ignore store@sparkles"
+    "test": "lab -cv --ignore store@sparkles"
   },
   "dependencies": {
     "bach": "^0.4.1",
