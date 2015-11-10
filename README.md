@@ -1,7 +1,7 @@
 undertaker
 ==========
 
-[![Build Status](https://travis-ci.org/phated/undertaker.svg?branch=master)](https://travis-ci.org/phated/undertaker)
+[![Build Status](https://travis-ci.org/gulpjs/undertaker.svg?branch=master)](https://travis-ci.org/gulpjs/undertaker)
 
 Task registry that allows composition through `series`/`parallel` methods.
 
@@ -46,7 +46,7 @@ __Task functions can be completed in any of the ways supported by
 
 The constructor is used to create a new instance of `Undertaker`. Each instance of
 `Undertaker` gets its own instance of a registry. By default, the registry is an
-instance of [`undertaker-registry`](https://github.com/phated/undertaker-registry)
+instance of [`undertaker-registry`](https://github.com/gulpjs/undertaker-registry)
 but it can be any other registry that follows the [Custom Registries API](#custom-registries).
 
 To use a custom registry, pass the custom registry's constructor function when
