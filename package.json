@@ -26,22 +26,22 @@
     "es6-weak-map": "^2.0.1",
     "last-run": "^1.1.0",
     "lodash": "^3.5.0",
-    "undertaker-registry": "0.0.3"
+    "undertaker-registry": "^1.0.0"
   },
   "devDependencies": {
     "async-once": "^1.0.0",
     "code": "^1.2.1",
     "del": "^2.0.2",
-    "eslint": "1.7.3",
-    "eslint-config-gulp": "2.0.0",
+    "eslint": "^1.7.3",
+    "eslint-config-gulp": "^2.0.0",
     "gulp-jshint": "^1.8.4",
-    "jscs": "2.3.5",
-    "jscs-preset-gulp": "1.0.0",
+    "jscs": "^2.3.5",
+    "jscs-preset-gulp": "^1.0.0",
     "lab": "^6.2.0",
     "once": "^1.3.1",
     "through2": "^2.0.0",
-    "undertaker-common-tasks": "git://github.com/phated/undertaker-common-tasks",
-    "undertaker-task-metadata": "git://github.com/undertakerjs/undertaker-task-metadata",
+    "undertaker-common-tasks": "^1.0.0",
+    "undertaker-task-metadata": "^1.0.0",
     "vinyl-fs": "^2.2.0"
   },
   "keywords": [
