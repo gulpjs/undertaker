@@ -206,8 +206,8 @@ CommonRegistry.prototype.init = function(takerInst){
     throw new Error('Cannot initialize common tasks. ' + buildDir + ' directory exists.');
   }
 
-  takerInst.task('clean', function(cb){
-    del([buildDir], cb);
+  takerInst.task('clean', function(){
+    return del([buildDir]);
   });
 }
 
@@ -242,8 +242,8 @@ var Undertaker = require('undertaker');
 var DefaultRegistry = require('undertaker-registry');
 
 // Some task defined somewhere else
-var BuildRegistery = require('./build.js');
-var ServeRegistery = require('./serve.js');
+var BuildRegistry = require('./build.js');
+var ServeRegistry = require('./serve.js');
 
 function ConfigRegistry(config){
   DefaultRegistry.call(this);
@@ -260,8 +260,8 @@ ConfigRegistry.prototype.set = function set(name, fn) {
 
 var taker = new Undertaker();
 
-taker.registry(new BuildRegistery());
-taker.registry(new ServeRegistery());
+taker.registry(new BuildRegistry());
+taker.registry(new ServeRegistry());
 
 // `taker.registry` will reset each task in the registry with
 // `ConfigRegistry.prototype.set` which will bind them to the config object.
