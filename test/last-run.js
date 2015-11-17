@@ -16,6 +16,7 @@ describe('lastRun', function() {
   var test1;
   var test2;
   var error;
+  var alias;
 
   beforeEach(function(done) {
     process.env.UNDERTAKER_TIME_RESOLUTION = '0';
@@ -30,6 +31,9 @@ describe('lastRun', function() {
 
     error = function(cb){ cb(new Error()); };
     taker.task('error', error);
+
+    alias = test1;
+    taker.task('alias', alias);
 
     done();
   });
@@ -75,6 +79,13 @@ describe('lastRun', function() {
   it('should record same tasks time execution for a string task and its original', function(done){
     taker.series(test2)(function(err){
       expect(taker.lastRun(test2)).to.equal(taker.lastRun('test2'));
+      done(err);
+    });
+  });
+
+  it('should record tasks time execution for an aliased task', function(done){
+    taker.series('alias')(function(err){
+      expect(taker.lastRun('alias')).to.equal(taker.lastRun('test1'));
       done(err);
     });
   });
