@@ -278,6 +278,15 @@ taker.task('default', taker.series('clean', 'build', 'serve', function(cb) {
 }));
 ```
 
+### In the wild
+
+* [undertaker-registry](https://github.com/gulpjs/undertaker-registry) - Custom registries probably want to inherit from this.
+* [undertaker-forward-reference](https://github.com/gulpjs/undertaker-forward-reference) - Custom registry supporting forward referenced tasks (similar to gulp 3.x).
+* [undertaker-task-metadata](https://github.com/gulpjs/undertaker-task-metadata) - Proof-of-concept custom registry that attaches metadata to each task.
+* [undertaker-common-tasks](https://github.com/gulpjs/undertaker-common-tasks) - Proof-of-concept custom registry that pre-defines some tasks.
+* [alchemist-gulp](https://github.com/webdesserts/alchemist-gulp) - A default set of tasks for building alchemist plugins.
+* [gulp-hub](https://github.com/frankwallis/gulp-hub/tree/registry-init) - Custom registry to run tasks in multiple gulpfiles. (In a branch as of this writing)
+
 ## License
 
 MIT
