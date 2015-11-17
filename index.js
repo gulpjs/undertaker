@@ -14,11 +14,11 @@ var registry = require('./lib/registry');
 var _getTask = require('./lib/get-task');
 var _setTask = require('./lib/set-task');
 
-function Undertaker(customRegistry){
+function Undertaker(customRegistry) {
   EventEmitter.call(this);
 
   this._registry = new DefaultRegistry();
-  if(customRegistry){
+  if (customRegistry) {
     this.registry(customRegistry);
   }
 

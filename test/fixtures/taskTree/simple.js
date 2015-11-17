@@ -9,5 +9,5 @@ module.exports = [
   'par',
   'serpar',
   'serpar2',
-  '<display name>'
+  '<display name>',
 ];

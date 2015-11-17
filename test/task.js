@@ -9,34 +9,33 @@ var beforeEach = lab.beforeEach;
 
 var Undertaker = require('../');
 
-function noop(done){
+function noop(done) {
   done();
 }
 
-var anon = function(){};
+var anon = function() {};
 
-describe('task', function(){
-
+describe('task', function() {
   var taker;
 
-  beforeEach(function(done){
+  beforeEach(function(done) {
     taker = new Undertaker();
     done();
   });
 
-  it('should register a named function', function(done){
+  it('should register a named function', function(done) {
     taker.task(noop);
     expect(taker.task('noop')).to.equal(noop);
     done();
   });
 
-  it('should register an anonymous function by string name', function(done){
+  it('should register an anonymous function by string name', function(done) {
     taker.task('test1', anon);
     expect(taker.task('test1')).to.equal(anon);
     done();
   });
 
-  it('should register an anonymous function by displayName property', function(done){
+  it('should register an anonymous function by displayName property', function(done) {
     anon.displayName = '<display name>';
     taker.task(anon);
     expect(taker.task('<display name>')).to.equal(anon);
@@ -44,8 +43,8 @@ describe('task', function(){
     done();
   });
 
-  it('should throw on register an anonymous function without string name', function(done){
-    function noName(){
+  it('should throw on register an anonymous function without string name', function(done) {
+    function noName() {
       taker.task(anon);
     }
 
@@ -53,24 +52,24 @@ describe('task', function(){
     done();
   });
 
-  it('should register a named function by string name', function(done){
+  it('should register a named function by string name', function(done) {
     taker.task('test1', noop);
     expect(taker.task('test1')).to.equal(noop);
     done();
   });
 
-  it('should not get a task that was not registered', function(done){
+  it('should not get a task that was not registered', function(done) {
     expect(taker.task('test1')).to.be.undefined();
     done();
   });
 
-  it('should get a task that was registered', function(done){
+  it('should get a task that was registered', function(done) {
     taker.task('test1', noop);
     expect(taker.task('test1')).to.equal(noop);
     done();
   });
 
-  it('should return a function that was registered in some other way', function(done){
+  it('should return a function that was registered in some other way', function(done) {
     taker.registry()._tasks.test1 = noop;
     expect(taker.task('test1')).to.equal(noop);
     done();
@@ -88,7 +87,7 @@ describe('task', function(){
     function fn() {}
     taker.task('foo', fn);
     taker.task('bar', fn);
-    expect(taker.task('foo' )).to.equal(taker.task('bar'));
+    expect(taker.task('foo')).to.equal(taker.task('bar'));
     done();
   });
 
@@ -108,7 +107,7 @@ describe('task', function(){
     });
 
     taker.parallel('foo', 'bar', function(cb) {
-      setTimeout(function(){
+      setTimeout(function() {
         expect(count).to.equal(4);
         cb();
       }, 500);
@@ -140,7 +139,7 @@ describe('task', function(){
     });
 
     taker.series('bar', function(cb) {
-      setTimeout(function(){
+      setTimeout(function() {
         expect(count).to.equal(6);
         cb();
       }, 500);
