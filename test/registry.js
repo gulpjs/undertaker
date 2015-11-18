@@ -20,6 +20,18 @@ CustomRegistry.prototype.get = noop;
 CustomRegistry.prototype.set = noop;
 CustomRegistry.prototype.tasks = noop;
 
+function SetNoReturnRegistry() {
+  this._tasks = {};
+}
+SetNoReturnRegistry.prototype.init = noop;
+SetNoReturnRegistry.prototype.get = function(name) {
+  return this.tasks[name];
+};
+SetNoReturnRegistry.prototype.set = function(name, fn) {
+  this.tasks[name] = fn;
+};
+SetNoReturnRegistry.prototype.tasks = noop;
+
 function InvalidRegistry() {}
 
 describe('registry', function() {
@@ -173,6 +185,17 @@ describe('registry', function() {
       taker = new Undertaker(new InvalidRegistry());
       done();
     });
+  });
+
+  it('does not require the `set` method to return a task', function(done) {
+    var taker = new Undertaker();
+    taker.registry(new SetNoReturnRegistry());
+    taker.task('test', noop);
+    taker.on('start', function(data) {
+      expect(data.name).to.equal('test');
+      done();
+    });
+    taker.series('test')();
   });
 
 });
