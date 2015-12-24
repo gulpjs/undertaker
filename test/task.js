@@ -91,7 +91,7 @@ describe('task', function() {
   });
 
   it('should return a function that was registered in some other way', function(done) {
-    var task1 = taker.task('test1', noop);
+    taker.task('test1', noop);
     expect(taker._getTask('test1')).to.equal(noop);
     expect(taker.task('test1')).to.not.equal(noop);
     done();

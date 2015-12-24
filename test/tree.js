@@ -235,7 +235,7 @@ describe('tree', function() {
     taker.task('fn2', taker.parallel(anon, noop)).description = 'Fn 2';
     taker.task('fn3', taker.series('fn1', 'fn2')).description = 'Fn 3';
 
-    var tree = taker.tree({ deep: false }, function(node, metaTree) {
+    var tree = taker.tree({ deep: false }, function(node) {
       node.name = node.label;
       node.desc = node.description;
       delete node.nodes;
