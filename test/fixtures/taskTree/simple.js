@@ -3,14 +3,14 @@
 module.exports = {
   label: 'Tasks',
   nodes: [
+    '<display name>',
+    'error',
+    'par',
+    'ser',
+    'serpar',
+    'serpar2',
     'test1',
     'test2',
     'test3',
-    'error',
-    'ser',
-    'par',
-    'serpar',
-    'serpar2',
-    '<display name>',
   ],
 };
