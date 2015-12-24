@@ -24,21 +24,36 @@ describe('task', function() {
   });
 
   it('should register a named function', function(done) {
-    taker.task(noop);
-    expect(taker.task('noop')).to.equal(noop);
+    var task0 = taker.task('noop');
+    expect(task0).to.be.undefined();
+
+    var task1 = taker.task(noop);
+    expect(task1).to.exist();
+    expect(task1).function();
+
+    var task2 = taker.task('noop');
+    expect(task2).to.equal(task1);
     done();
   });
 
   it('should register an anonymous function by string name', function(done) {
-    taker.task('test1', anon);
-    expect(taker.task('test1')).to.equal(anon);
+    var task1 = taker.task('test1', anon);
+    expect(task1).to.exist();
+    expect(task1).function();
+
+    var task2 = taker.task('test1');
+    expect(task2).to.equal(task1);
     done();
   });
 
   it('should register an anonymous function by displayName property', function(done) {
     anon.displayName = '<display name>';
-    taker.task(anon);
-    expect(taker.task('<display name>')).to.equal(anon);
+
+    var task1 = taker.task(anon);
+    expect(task1).to.exist();
+    expect(task1).function();
+
+    expect(taker.task('<display name>')).to.equal(task1);
     delete anon.displayName;
     done();
   });
@@ -53,8 +68,11 @@ describe('task', function() {
   });
 
   it('should register a named function by string name', function(done) {
-    taker.task('test1', noop);
-    expect(taker.task('test1')).to.equal(noop);
+    var task1 = taker.task('test1', noop);
+    expect(task1).to.exist();
+    expect(task1).function();
+
+    expect(taker.task('test1')).to.equal(task1);
     done();
   });
 
@@ -64,30 +82,36 @@ describe('task', function() {
   });
 
   it('should get a task that was registered', function(done) {
-    taker.task('test1', noop);
-    expect(taker.task('test1')).to.equal(noop);
+    var task1 = taker.task('test1', noop);
+    expect(task1).to.exist();
+    expect(task1).function();
+
+    expect(taker.task('test1')).to.equal(task1);
     done();
   });
 
   it('should return a function that was registered in some other way', function(done) {
-    taker.registry()._tasks.test1 = noop;
-    expect(taker.task('test1')).to.equal(noop);
+    var task1 = taker.task('test1', noop);
+    expect(taker._getTask('test1')).to.equal(noop);
+    expect(taker.task('test1')).to.not.equal(noop);
     done();
   });
 
   it('should prefer displayName instead of name when both properties are defined', function(done) {
     function fn() {}
     fn.displayName = 'test1';
-    taker.task(fn);
-    expect(taker.task('test1')).to.equal(fn);
+    var task1 = taker.task(fn);
+    expect(taker.task('test1')).to.equal(task1);
     done();
   });
 
   it('should allow different tasks to refer to the same function', function(done) {
     function fn() {}
-    taker.task('foo', fn);
-    taker.task('bar', fn);
-    expect(taker.task('foo')).to.equal(taker.task('bar'));
+    var foo = taker.task('foo', fn);
+    var bar = taker.task('bar', fn);
+    expect(taker.task('foo')).to.equal(foo);
+    expect(taker.task('bar')).to.equal(bar);
+    expect(foo).to.not.equal(bar);
     done();
   });
 
@@ -149,4 +173,40 @@ describe('task', function() {
     done();
   });
 
+  it('attach task description to task', function(done) {
+    taker.task('task-0', noop).description = 'Task #0.';
+    var task0 = taker.task('task-0');
+    expect(task0.description).to.equal('Task #0.');
+    done();
+  });
+
+  it('attack task description with an object', function(done) {
+    taker.task('task-0', noop).description = {
+      '': 'Task #0.',
+      '--option1': 'Option 1.',
+      '--option2': 'Option 2.',
+    };
+    var task0 = taker.task('task-0');
+    expect(task0.description['']).to.equal('Task #0.');
+    expect(task0.description['--option1']).to.equal('Option 1.');
+    expect(task0.description['--option2']).to.equal('Option 2.');
+    done();
+  });
+
+  it('attack task description from function property', function(done) {
+    var fn = function() {};
+    fn.description = 'A Function';
+    var task0 = taker.task('task-0', fn);
+    expect(task0.description).to.equal('A Function');
+    done();
+  });
+
+  it('Use a description with task#description rather than function#description', function(done) {
+    var fn = function() {};
+    fn.description = 'A Function';
+    taker.task('task-0', fn).description = 'Task #0';
+    var task0 = taker.task('task-0');
+    expect(task0.description).to.equal('Task #0');
+    done();
+  });
 });
