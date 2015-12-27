@@ -4,9 +4,13 @@ module.exports = {
   label: 'Tasks',
   nodes: [
     {
-      label: '[fn1] : Fn 1',
+      label: 'fn1',
       type: 'task',
-      description: 'Fn 1',
+      description: 'Task #1.',
+      flag: {
+        '--opt1': 'Option 1.',
+        '--opt2': 'Option 2.',
+      },
       nodes: [
         {
           label: '<parallel>',
@@ -27,9 +31,9 @@ module.exports = {
       ],
     },
     {
-      label: '[fn2] : Fn 2',
+      label: 'fn2',
       type: 'task',
-      description: 'Fn 2',
+      description: 'Task #2.',
       nodes: [
         {
           label: '<parallel>',
@@ -50,9 +54,12 @@ module.exports = {
       ],
     },
     {
-      label: '[fn3] : Fn 3',
+      label: 'fn3',
       type: 'task',
-      description: 'Fn 3',
+      flag: {
+        '--opt3': 'Option 3.',
+        '--opt4': 'Option 4.',
+      },
       nodes: [
         {
           label: '<series>',

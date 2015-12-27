@@ -19,8 +19,7 @@ var depth3OfTripleLevel = require('./fixtures/taskTree/depth3OfTripleLevel');
 var depth4OfTripleLevel = require('./fixtures/taskTree/depth4OfTripleLevel');
 var aliasSimple = require('./fixtures/taskTree/aliasSimple');
 var aliasNested = require('./fixtures/taskTree/aliasNested');
-var simpleWithTrans = require('./fixtures/taskTree/simpleWithTrans');
-var deepWithTrans = require('./fixtures/taskTree/deepWithTrans');
+var tripleLevelWithDescAndFlag = require('./fixtures/taskTree/tripleLevelWithDescAndFlag');
 
 function noop(done) {
   done();
@@ -227,43 +226,33 @@ describe('tree', function() {
     done();
   });
 
-  it('use transformer for simple', function(done) {
+  it('get description and flag from a registered function', function(done) {
     var anon = function(cb) {
       cb();
     };
-    taker.task('fn1', taker.parallel(anon, noop)).description = 'Fn 1';
-    taker.task('fn2', taker.parallel(anon, noop)).description = 'Fn 2';
-    taker.task('fn3', taker.series('fn1', 'fn2')).description = 'Fn 3';
 
-    var tree = taker.tree({ deep: false }, function(node) {
-      node.name = node.label;
-      node.desc = node.description;
-      delete node.nodes;
-      delete node.description;
-      delete node.label;
-      delete node.type;
-      return node;
-    });
-
-    expect(tree).to.deep.equal(simpleWithTrans);
-    done();
-  });
-
-  it('use transformer for deep', function(done) {
-    var anon = function(cb) {
-      cb();
+    var f1 = taker.parallel(anon, noop);
+    f1.description = 'Task #1.';
+    f1.flag = {
+      '--opt1': 'Option 1.',
+      '--opt2': 'Option 2.',
     };
-    taker.task('fn1', taker.parallel(anon, noop)).description = 'Fn 1';
-    taker.task('fn2', taker.parallel(anon, noop)).description = 'Fn 2';
-    taker.task('fn3', taker.series('fn1', 'fn2')).description = 'Fn 3';
+    taker.task('fn1', f1);
 
-    var tree = taker.tree({ deep: true }, function(node, metaTree, depth) {
-      if (depth === 1) {
-        node.label = '[' + node.label + '] : ' + node.description;
-      }
-      return node;
-    });
-    expect(tree).to.deep.equal(deepWithTrans);
+    var f2 = taker.parallel(anon, noop);
+    f2.description = 'Task #2.';
+    taker.task('fn2', f2);
+
+    var f3 = taker.series('fn1', 'fn2');
+    f3.flag = {
+      '--opt3': 'Option 3.',
+      '--opt4': 'Option 4.',
+    };
+    taker.task('fn3', f3);
+
+    var tree = taker.tree({ deep: true });
+
+    expect(tree).to.deep.equal(tripleLevelWithDescAndFlag);
     done();
   });
 });
