@@ -24,21 +24,28 @@ describe('task', function() {
   });
 
   it('should register a named function', function(done) {
-    taker.task(noop);
+    expect(taker.task('noop')).to.be.undefined();
+    expect(taker.task(noop)).to.be.undefined();
     expect(taker.task('noop')).to.equal(noop);
     done();
   });
 
   it('should register an anonymous function by string name', function(done) {
-    taker.task('test1', anon);
+    expect(taker.task('test1')).to.be.undefined();
+    expect(taker.task('test1', anon)).to.be.undefined();
     expect(taker.task('test1')).to.equal(anon);
     done();
   });
 
   it('should register an anonymous function by displayName property', function(done) {
     anon.displayName = '<display name>';
+
     taker.task(anon);
-    expect(taker.task('<display name>')).to.equal(anon);
+
+    var task0 = taker.task('<display name>');
+    expect(task0).to.equal(anon);
+    expect(task0.displayName).to.equal('<display name>');
+
     delete anon.displayName;
     done();
   });
@@ -53,7 +60,7 @@ describe('task', function() {
   });
 
   it('should register a named function by string name', function(done) {
-    taker.task('test1', noop);
+    expect(taker.task('test1', noop)).to.be.undefined();
     expect(taker.task('test1')).to.equal(noop);
     done();
   });
@@ -64,14 +71,18 @@ describe('task', function() {
   });
 
   it('should get a task that was registered', function(done) {
-    taker.task('test1', noop);
+    expect(taker.task('test1', noop)).to.be.undefined();
+    expect(taker.task('test1')).to.equal(noop);
+    expect(taker.task('test1')).to.equal(noop);
     expect(taker.task('test1')).to.equal(noop);
     done();
   });
 
   it('should return a function that was registered in some other way', function(done) {
-    taker.registry()._tasks.test1 = noop;
+    taker.task('test1', noop);
+    expect(taker._getTask('test1')).to.equal(noop);
     expect(taker.task('test1')).to.equal(noop);
+    expect(taker.registry()._tasks.test1, noop);
     done();
   });
 
@@ -149,4 +160,67 @@ describe('task', function() {
     done();
   });
 
+  it('use fn.description as a task description', function(done) {
+    function fn() {}
+    fn.description = 'Task #0.';
+    taker.task('task-0', fn);
+    var task0 = taker.task('task-0');
+    expect(task0).to.equal(fn);
+    expect(task0.description).to.equal('Task #0.');
+    done();
+  });
+
+  it('use fn.flag as a task options', function(done) {
+    function fn() {}
+    fn.flag = {
+      '--option1': 'Option 1.',
+      '--option2': 'Option 2.',
+    };
+    taker.task('task-0', fn);
+    var task0 = taker.task('task-0');
+    expect(task0).to.equal(fn);
+    expect(task0.flag['--option1']).to.equal('Option 1.');
+    expect(task0.flag['--option2']).to.equal('Option 2.');
+    done();
+  });
+
+  it('take over a description and a flag between tasks', function(done) {
+    function fn() {}
+    fn.description = 'Task #0.';
+    fn.flag = {
+      '--option1': 'Option 1.',
+      '--option2': 'Option 2.',
+    };
+
+    taker.task('task-0', fn);
+    var task0 = taker.task('task-0');
+    expect(task0).to.equal(fn);
+    expect(task0.description).to.equal('Task #0.');
+    expect(task0.flag['--option1']).to.equal('Option 1.');
+    expect(task0.flag['--option2']).to.equal('Option 2.');
+
+    taker.task('task-1', taker.task('task-0'));
+    var task1 = taker.task('task-1');
+    expect(task1).to.equal(fn);
+    expect(task1.description).to.equal('Task #0.');
+    expect(task1.flag['--option1']).to.equal('Option 1.');
+    expect(task1.flag['--option2']).to.equal('Option 2.');
+
+    taker.task(fn);
+    var task2 = taker.task('fn');
+    expect(task2).to.equal(fn);
+    expect(task1.description).to.equal('Task #0.');
+    expect(task1.flag['--option1']).to.equal('Option 1.');
+    expect(task1.flag['--option2']).to.equal('Option 2.');
+
+    fn.displayName = 'task-2';
+    taker.task(fn);
+    var task2 = taker.task('task-2');
+    expect(task2).to.equal(fn);
+    expect(task1.description).to.equal('Task #0.');
+    expect(task1.flag['--option1']).to.equal('Option 1.');
+    expect(task1.flag['--option2']).to.equal('Option 2.');
+
+    done();
+  });
 });
