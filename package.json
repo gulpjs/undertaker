@@ -22,7 +22,7 @@
     "test": "lab -cv --ignore store@sparkles"
   },
   "dependencies": {
-    "bach": "^0.4.1",
+    "bach": "^0.5.0",
     "es6-weak-map": "^2.0.1",
     "last-run": "^1.1.0",
     "lodash.defaults": "^4.0.1",
