@@ -10,6 +10,7 @@ module.exports = {
         {
           label: '<parallel>',
           type: 'function',
+          branch: true,
           nodes: [
             {
               label: '<anonymous>',
@@ -32,6 +33,7 @@ module.exports = {
         {
           label: '<parallel>',
           type: 'function',
+          branch: true,
           nodes: [
             {
               label: '<anonymous>',
@@ -54,6 +56,7 @@ module.exports = {
         {
           label: '<series>',
           type: 'function',
+          branch: true,
           nodes: [
             {
               label: 'fn1',
@@ -62,6 +65,7 @@ module.exports = {
                 {
                   label: '<parallel>',
                   type: 'function',
+                  branch: true,
                   nodes: [
                     {
                       label: '<anonymous>',
@@ -84,6 +88,7 @@ module.exports = {
                 {
                   label: '<parallel>',
                   type: 'function',
+                  branch: true,
                   nodes: [
                     {
                       label: '<anonymous>',

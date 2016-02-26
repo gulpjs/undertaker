@@ -20,6 +20,7 @@ module.exports = {
         {
           label: '<series>',
           type: 'function',
+          branch: true,
           nodes: [
             {
               label: 'fn1',

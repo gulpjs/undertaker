@@ -30,6 +30,7 @@ module.exports = {
         {
           label: '<series>',
           type: 'function',
+          branch: true,
           nodes: [
             {
               label: 'noop',
@@ -67,6 +68,7 @@ module.exports = {
         {
           label: '<parallel>',
           type: 'function',
+          branch: true,
           nodes: [
             {
               label: 'noop',
