@@ -1,6 +1,6 @@
 {
   "name": "undertaker",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Task registry that allows composition through series/parallel methods.",
   "author": "Blaine Bublitz <blaine@iceddev.com> (http://iceddev.com/)",
   "contributors": [
