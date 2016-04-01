@@ -286,6 +286,7 @@ taker.task('default', taker.series('clean', 'build', 'serve', function(cb) {
 * [undertaker-common-tasks](https://github.com/gulpjs/undertaker-common-tasks) - Proof-of-concept custom registry that pre-defines some tasks.
 * [alchemist-gulp](https://github.com/webdesserts/alchemist-gulp) - A default set of tasks for building alchemist plugins.
 * [gulp-hub](https://github.com/frankwallis/gulp-hub/tree/registry-init) - Custom registry to run tasks in multiple gulpfiles. (In a branch as of this writing)
+* [gulp-pipeline](https://github.com/alienfast/gulp-pipeline) - [RailsRegistry](https://github.com/alienfast/gulp-pipeline/blob/master/src/registry/railsRegistry.js) is an ES2015 class that provides a gulp pipeline replacement for rails applications
 
 ## License
 
