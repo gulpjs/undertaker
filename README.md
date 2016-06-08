@@ -58,7 +58,8 @@ to create the registry for this instance.
 Both a `getter` and `setter` for tasks.
 
 If a string (`taskName`) is given as the only argument, it behaves as a `getter`
-and returns the registered function.
+and returns the wrapped task (not the original function). The wrapped task has a `unwrap`
+method that will return the original function.
 
 If a function (`fn`) and optionally a string (`taskName`) is given, it behaves as
 a `setter` and will register the task by the `taskName`.  If `taskName` is not

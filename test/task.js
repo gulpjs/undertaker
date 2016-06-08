@@ -25,20 +25,20 @@ describe('task', function() {
 
   it('should register a named function', function(done) {
     taker.task(noop);
-    expect(taker.task('noop')).to.equal(noop);
+    expect(taker.task('noop').unwrap()).to.equal(noop);
     done();
   });
 
   it('should register an anonymous function by string name', function(done) {
     taker.task('test1', anon);
-    expect(taker.task('test1')).to.equal(anon);
+    expect(taker.task('test1').unwrap()).to.equal(anon);
     done();
   });
 
   it('should register an anonymous function by displayName property', function(done) {
     anon.displayName = '<display name>';
     taker.task(anon);
-    expect(taker.task('<display name>')).to.equal(anon);
+    expect(taker.task('<display name>').unwrap()).to.equal(anon);
     delete anon.displayName;
     done();
   });
@@ -54,7 +54,7 @@ describe('task', function() {
 
   it('should register a named function by string name', function(done) {
     taker.task('test1', noop);
-    expect(taker.task('test1')).to.equal(noop);
+    expect(taker.task('test1').unwrap()).to.equal(noop);
     done();
   });
 
@@ -65,7 +65,22 @@ describe('task', function() {
 
   it('should get a task that was registered', function(done) {
     taker.task('test1', noop);
-    expect(taker.task('test1')).to.equal(noop);
+    expect(taker.task('test1').unwrap()).to.equal(noop);
+    done();
+  });
+
+  it('should get the wrapped task, not original function', function(done) {
+    var registry = taker.registry();
+    taker.task('test1', noop);
+    expect(taker.task('test1').unwrap).to.be.a.function();
+    expect(taker.task('test1')).to.equal(registry.get('test1'));
+    done();
+  });
+
+  it('provides an `unwrap` method to get the original function', function(done) {
+    taker.task('test1', noop);
+    expect(taker.task('test1').unwrap).to.be.a.function();
+    expect(taker.task('test1').unwrap()).to.equal(noop);
     done();
   });
 
@@ -79,7 +94,7 @@ describe('task', function() {
     function fn() {}
     fn.displayName = 'test1';
     taker.task(fn);
-    expect(taker.task('test1')).to.equal(fn);
+    expect(taker.task('test1').unwrap()).to.equal(fn);
     done();
   });
 
@@ -87,7 +102,7 @@ describe('task', function() {
     function fn() {}
     taker.task('foo', fn);
     taker.task('bar', fn);
-    expect(taker.task('foo' )).to.equal(taker.task('bar'));
+    expect(taker.task('foo').unwrap()).to.equal(taker.task('bar').unwrap());
     done();
   });
 
