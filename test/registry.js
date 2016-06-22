@@ -1,13 +1,14 @@
 'use strict';
 
 var lab = exports.lab = require('lab').script();
+var expect = require('code').expect;
+
 var describe = lab.describe;
 var it = lab.it;
 var before = lab.before;
 var beforeEach = lab.beforeEach;
 var after = lab.after;
 var afterEach = lab.afterEach;
-var expect = require('lab').expect;
 
 var Undertaker = require('../');
 
@@ -58,8 +59,8 @@ describe('registry', function(){
       var customRegistry = new DefaultRegistry();
       taker.registry(customRegistry);
 
-      expect(customRegistry.get('clean')).to.be.a('function');
-      expect(customRegistry.get('serve')).to.be.a('function');
+      expect(customRegistry.get('clean')).to.be.a.function();
+      expect(customRegistry.get('serve')).to.be.a.function();
       done();
     });
   });
@@ -84,8 +85,8 @@ describe('registry', function(){
       var taker = new Undertaker(CommonRegistry);
       expect(taker.registry()).to.be.an.instanceof(CommonRegistry);
       expect(taker.registry()).to.be.an.instanceof(DefaultRegistry);
-      expect(taker.get('clean')).to.be.a('function');
-      expect(taker.get('serve')).to.be.a('function');
+      expect(taker.get('clean')).to.be.a.function();
+      expect(taker.get('serve')).to.be.a.function();
       done();
     });
 
