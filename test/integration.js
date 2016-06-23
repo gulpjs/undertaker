@@ -2,6 +2,7 @@
 
 var expect = require('expect');
 
+var os = require('os');
 var fs = require('fs');
 var path = require('path');
 var vinyl = require('vinyl-fs');
@@ -14,6 +15,15 @@ var through = require('through2');
 
 var Undertaker = require('../');
 
+var isWindows = (os.platform() === 'win32');
+
+function cleanup() {
+  return del([
+    path.join(__dirname, './fixtures/out/'),
+    path.join(__dirname, './fixtures/tmp/'),
+  ]);
+}
+
 describe('integrations', function() {
 
   var taker;
@@ -22,6 +32,9 @@ describe('integrations', function() {
     taker = new Undertaker();
     done();
   });
+
+  beforeEach(cleanup);
+  afterEach(cleanup);
 
   it('should handle vinyl streams', function(done) {
     taker.task('test', function() {
@@ -51,6 +64,10 @@ describe('integrations', function() {
 
   it('should handle a child process return', function(done) {
     taker.task('test', function() {
+      if (isWindows) {
+        return spawn('cmd', ['/c', 'dir']).on('error', console.log);
+      }
+
       return spawn('ls', ['-lh', __dirname]);
     });
 
@@ -109,12 +126,17 @@ describe('integrations', function() {
   });
 
   it('can use lastRun with vinyl.src `since` option', function(done) {
+    this.timeout(5000);
+
     var count = 0;
-    var filepath = path.join(__dirname, './fixtures/tmp/testMore.js');
 
     function setup() {
       return vinyl.src('./fixtures/test*.js', { cwd: __dirname })
         .pipe(vinyl.dest('./fixtures/tmp', { cwd: __dirname }));
+    }
+
+    function delay(cb) {
+      setTimeout(cb, 2000);
     }
 
     // Some built
@@ -123,16 +145,8 @@ describe('integrations', function() {
         .pipe(vinyl.dest('./fixtures/out', { cwd: __dirname }));
     });
 
-    function userWait(cd) {
-      setTimeout(cd, 1100);
-    }
-
     function userEdit(cb) {
-      fs.appendFile(filepath, ' ', cb);
-    }
-
-    function cleanup(cb) {
-      fs.unlink(filepath, cb);
+      fs.appendFile(path.join(__dirname, './fixtures/tmp/testMore.js'), ' ', cb);
     }
 
     function countEditedFiles() {
@@ -143,9 +157,9 @@ describe('integrations', function() {
         }));
     }
 
-    taker.series(setup, 'build', userWait, userEdit, countEditedFiles, cleanup, function(cb) {
+    taker.series(setup, delay, 'build', delay, userEdit, countEditedFiles)(function(err) {
       expect(count).toEqual(1);
-      cb();
-    })(done);
+      done(err);
+    });
   });
 });
