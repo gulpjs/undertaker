@@ -2,11 +2,12 @@
   "name": "undertaker",
   "version": "0.15.0",
   "description": "Task registry that allows composition through series/parallel methods.",
-  "author": "Blaine Bublitz <blaine@iceddev.com> (http://iceddev.com/)",
+  "author": "Gulp Team <team@gulpjs.com> (http://gulpjs.com/)",
   "contributors": [
+    "Blaine Bublitz <blaine.bublitz@gmail.com>",
     "Damien Lebrun <dinoboff@hotmail.com>"
   ],
-  "repository": "phated/undertaker",
+  "repository": "gulpjs/undertaker",
   "license": "MIT",
   "engines": {
     "node": ">= 0.10"

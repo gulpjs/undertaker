@@ -1,7 +1,12 @@
-undertaker
-==========
+<p align="center">
+  <a href="http://gulpjs.com">
+    <img height="257" width="114" src="https://raw.githubusercontent.com/gulpjs/artwork/master/gulp-2x.png">
+  </a>
+</p>
 
-[![Build Status](https://travis-ci.org/gulpjs/undertaker.svg?branch=master)](https://travis-ci.org/gulpjs/undertaker)
+# undertaker
+
+[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url] [![Coveralls Status][coveralls-image]][coveralls-url] [![Gitter chat][gitter-image]][gitter-url]
 
 Task registry that allows composition through `series`/`parallel` methods.
 
@@ -40,20 +45,19 @@ taker.task('all', taker.parallel('combined', 'task3'));
 ## API
 
 __Task functions can be completed in any of the ways supported by
-[`async-done`](https://github.com/phated/async-done#completion-and-error-resolution)__
+[`async-done`][async-resolution]__
 
-### `new Undertaker([RegistryConstructor])`
+### `new Undertaker([registryInstance])`
 
 The constructor is used to create a new instance of `Undertaker`. Each instance of
 `Undertaker` gets its own instance of a registry. By default, the registry is an
-instance of [`undertaker-registry`](https://github.com/gulpjs/undertaker-registry)
-but it can be any other registry that follows the [Custom Registries API](#custom-registries).
+instance of [`undertaker-registry`][undertaker-registry]
+but it can be an instance of any other registry that follows the [Custom Registries API][custom-registries].
 
-To use a custom registry, pass the custom registry's constructor function when
-instantiating a new `Undertaker` instance. This will use the custom constructor
-to create the registry for this instance.
+To use a custom registry, pass a custom registry instance (`new CustomRegistry([options])`) when
+instantiating a new `Undertaker` instance. This will use the custom registry instance for that `Undertaker` instance.
 
-### `task([taskName,] fn)` => [Function]
+### `task([taskName,] fn)`
 
 Both a `getter` and `setter` for tasks.
 
@@ -65,16 +69,13 @@ If a function (`fn`) and optionally a string (`taskName`) is given, it behaves a
 a `setter` and will register the task by the `taskName`.  If `taskName` is not
 specified, the `name` or `displayName` property of the function is used as the `taskName`.
 
-__Note: If you attempt to register the same function with different names, it will
-only be registered by the last name attempted.__
-
 Will throw if:
 
-* `taskName` is missing or not a string when behaving as a `getter` or
-is missing and function is anonymous when behaving as a `setter`.
-* `fn` is missing or not a function when behaving as a `setter`.
+* As a `getter`: `taskName` is missing or not a string.
+* As a `setter`: `taskName` is missing and `fn` is anonymous.
+* As a `setter`: `fn` is missing or not a function.
 
-### `series(taskName || fn...)` => Function
+### `series(taskName || fn...)`
 
 Takes a variable amount of strings (`taskName`) and/or functions (`fn`) and
 returns a function of the composed tasks or functions. Any `taskNames` are
@@ -84,7 +85,7 @@ When the returned function is executed, the tasks or functions will be executed
 in series, each waiting for the prior to finish. If an error occurs, execution
 will stop.
 
-### `parallel(taskName || fn...)` => Function
+### `parallel(taskName || fn...)`
 
 Takes a variable amount of strings (`taskName`) and/or functions (`fn`) and
 returns a function of the composed tasks or functions. Any `taskNames` are
@@ -102,21 +103,26 @@ the tasks from the current registry will be transferred to it and the current re
 will be replaced with the new registry.
 
 The ability to assign new registries will allow you to pre-define/share tasks or add
-custom functionality to your registries. See [Custom Registries](#custom-registries)
+custom functionality to your registries. See [Custom Registries][custom-registries]
 for more information.
 
-### `tree([options])` => Object
+### `tree([options])`
 
-Optionally takes an object (`options`) and returns an object representing the
-tree of registered tasks. The object returned is [`archy`](https://www.npmjs.org/package/archy)
-compatible when assigned to the `nodes` key. Also, each node has a `type`
-property that can be used to determine if the node is a `task` or `function`.
+Optionally takes an `options` object and returns an object representing the
+tree of registered tasks. The object returned is [`archy`][archy]
+compatible. Also, each node has a `type` property that can be used to determine if the node is a `task` or `function`.
 
 #### `options`
 
-* `deep` - if the whole tree should be returned (Default: `false`)
+##### `options.deep`
 
-### `lastRun(task, [timeResolution])` => [Timestamp]
+Whether or not the whole tree should be returned.
+
+Type: `Boolean`
+
+Default: `false`
+
+### `lastRun(task, [timeResolution])`
 
 Takes a string or function (`task`) and returns a timestamp of the last time the task
 was run successfully. The time will be the time the task started.
@@ -127,19 +133,15 @@ If a task errors, the result of `lastRun` will be undefined because the task
 should probably be re-run from scratch to get into a good state again.
 
 The timestamp is always given in millisecond but the time resolution can be
-reduced (rounded down). The use case is to be able to compare a build time
+rounded using the `timeResolution` parameter. The use case is to be able to compare a build time
 to a file time attribute. On node v0.10 or with file system like HFS or FAT,
 `fs.stat` time attributes like `mtime` precision is one second.
 
 Assuming `undertakerInst.lastRun('someTask')` returns `1426000001111`,
 `undertakerInst.lastRun('someTask', 1000)` returns `1426000001000`.
 
-The default time resolution is `1000` on node v0.10, `0` on node 0.11+ and iojs.
+The default time resolution is `1000` on node v0.10, `0` on node 0.11+ but
 it can be overwritten using `UNDERTAKER_TIME_RESOLUTION` environment variable.
-
-__Note: if you use a custom registry that modifies the function (such as `.bind`),
-you will need to use the string for `task` instead of a function because we have no
-way of looking up the function that was altered.__
 
 ## Custom Registries
 
@@ -157,10 +159,9 @@ A registry's prototype should define:
 You should not call these functions yourself; leave that to Undertaker, so it can
 keep its metadata consistent.
 
-The easiest way to create a custom registry is to inherit from
-[undertaker-registry](https://www.npmjs.com/package/undertaker-registry):
+The easiest way to create a custom registry is to inherit from [undertaker-registry]:
 
-```javascript
+```js
 var util = require('util');
 
 var DefaultRegistry = require('undertaker-registry');
@@ -177,12 +178,12 @@ module.exports = MyRegistry;
 ### Sharing tasks
 
 To share common tasks with all your projects, you can expose an `init` method on the registry
-prototype and it will receive the Undertaker instance as the only argument. You can then use
+prototype and it will receive the `Undertaker` instance as the only argument. You can then use
 `undertaker.task(name, fn)` to register pre-defined tasks.
 
 For example you might want to share a `clean` task:
 
-```javascript
+```js
 var fs = require('fs');
 var util = require('util');
 
@@ -216,7 +217,7 @@ module.exports = CommonRegistry;
 ```
 
 Then to use it in a project:
-```javascript
+```js
 var Undertaker = require('undertaker');
 var CommonRegistry = require('myorg-common-tasks');
 
@@ -236,7 +237,7 @@ For example if you wanted all tasks to share some data,  you can use a custom re
 to bind them to that data. Be sure to return the altered task, as per the description
 of registry methods above:
 
-```javascript
+```js
 var util = require('util');
 
 var Undertaker = require('undertaker');
@@ -281,14 +282,42 @@ taker.task('default', taker.series('clean', 'build', 'serve', function(cb) {
 
 ### In the wild
 
-* [undertaker-registry](https://github.com/gulpjs/undertaker-registry) - Custom registries probably want to inherit from this.
-* [undertaker-forward-reference](https://github.com/gulpjs/undertaker-forward-reference) - Custom registry supporting forward referenced tasks (similar to gulp 3.x).
-* [undertaker-task-metadata](https://github.com/gulpjs/undertaker-task-metadata) - Proof-of-concept custom registry that attaches metadata to each task.
-* [undertaker-common-tasks](https://github.com/gulpjs/undertaker-common-tasks) - Proof-of-concept custom registry that pre-defines some tasks.
-* [alchemist-gulp](https://github.com/webdesserts/alchemist-gulp) - A default set of tasks for building alchemist plugins.
-* [gulp-hub](https://github.com/frankwallis/gulp-hub/tree/registry-init) - Custom registry to run tasks in multiple gulpfiles. (In a branch as of this writing)
-* [gulp-pipeline](https://github.com/alienfast/gulp-pipeline) - [RailsRegistry](https://github.com/alienfast/gulp-pipeline/blob/master/src/registry/railsRegistry.js) is an ES2015 class that provides a gulp pipeline replacement for rails applications
+* [undertaker-registry] - Custom registries probably want to inherit from this.
+* [undertaker-forward-reference] - Custom registry supporting forward referenced tasks (similar to gulp 3.x).
+* [undertaker-task-metadata] - Proof-of-concept custom registry that attaches metadata to each task.
+* [undertaker-common-tasks] - Proof-of-concept custom registry that pre-defines some tasks.
+* [alchemist-gulp] - A default set of tasks for building alchemist plugins.
+* [gulp-hub] - Custom registry to run tasks in multiple gulpfiles. (In a branch as of this writing)
+* [gulp-pipeline] - [RailsRegistry][rails-registry] is an ES2015 class that provides a gulp pipeline replacement for rails applications
 
 ## License
 
 MIT
+
+[custom-registries]: #custom-registries
+[async-resolution]: https://github.com/phated/async-done#completion-and-error-resolution
+[archy]: https://www.npmjs.org/package/archy
+[undertaker-registry]: https://github.com/gulpjs/undertaker-registry
+[undertaker-forward-reference]: https://github.com/gulpjs/undertaker-forward-reference
+[undertaker-task-metadata]: https://github.com/gulpjs/undertaker-task-metadata
+[undertaker-common-tasks]: https://github.com/gulpjs/undertaker-common-tasks
+[alchemist-gulp]: https://github.com/webdesserts/alchemist-gulp
+[gulp-hub]: https://github.com/frankwallis/gulp-hub/tree/registry-init
+[gulp-pipeline]: https://github.com/alienfast/gulp-pipeline
+[rails-registry]: https://github.com/alienfast/gulp-pipeline/blob/master/src/registry/railsRegistry.js
+
+[downloads-image]: http://img.shields.io/npm/dm/undertaker.svg
+[npm-url]: https://www.npmjs.com/package/undertaker
+[npm-image]: http://img.shields.io/npm/v/undertaker.svg
+
+[travis-url]: https://travis-ci.org/gulpjs/undertaker
+[travis-image]: http://img.shields.io/travis/gulpjs/undertaker.svg?label=travis-ci
+
+[appveyor-url]: https://ci.appveyor.com/project/gulpjs/undertaker
+[appveyor-image]: https://img.shields.io/appveyor/ci/gulpjs/undertaker.svg?label=appveyor
+
+[coveralls-url]: https://coveralls.io/r/gulpjs/undertaker
+[coveralls-image]: http://img.shields.io/coveralls/gulpjs/undertaker/master.svg
+
+[gitter-url]: https://gitter.im/gulpjs/gulp
+[gitter-image]: https://badges.gitter.im/gulpjs/gulp.svg
