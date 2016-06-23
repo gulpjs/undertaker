@@ -6,27 +6,27 @@ module.exports = {
     {
       label: 'noop',
       type: 'task',
-      nodes: []
+      nodes: [],
     },
     {
       label: 'fn1',
       type: 'task',
-      nodes: []
+      nodes: [],
     },
     {
       label: 'fn2',
       type: 'task',
-      nodes: []
+      nodes: [],
     },
     {
       label: 'fn3',
       type: 'task',
-      nodes: []
+      nodes: [],
     },
     {
       label: 'fn4',
       type: 'task',
-      nodes: []
-    }
+      nodes: [],
+    },
   ],
 };

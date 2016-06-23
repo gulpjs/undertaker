@@ -117,7 +117,7 @@ describe('task', function() {
     });
 
     taker.parallel('foo', 'bar', function(cb) {
-      setTimeout(function(){
+      setTimeout(function() {
         expect(count).toEqual(4);
         cb();
       }, 500);
@@ -149,7 +149,7 @@ describe('task', function() {
     });
 
     taker.series('bar', function(cb) {
-      setTimeout(function(){
+      setTimeout(function() {
         expect(count).toEqual(6);
         cb();
       }, 500);

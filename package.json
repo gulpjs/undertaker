@@ -19,6 +19,7 @@
   ],
   "scripts": {
     "lint": "eslint . && jscs index.js test/",
+    "pretest": "npm run lint",
     "test": "mocha --async-only",
     "cover": "istanbul cover _mocha --report lcovonly",
     "coveralls": "npm run cover && istanbul-coveralls"

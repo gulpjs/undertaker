@@ -110,6 +110,7 @@ describe('integrations', function() {
 
   it('can use lastRun with vinyl.src `since` option', function(done) {
     var count = 0;
+    var filepath = path.join(__dirname, './fixtures/tmp/testMore.js');
 
     function setup() {
       return vinyl.src('./fixtures/test*.js', { cwd: __dirname })
@@ -127,7 +128,11 @@ describe('integrations', function() {
     }
 
     function userEdit(cb) {
-      fs.appendFile(path.join(__dirname, './fixtures/tmp/testMore.js'), ' ', cb);
+      fs.appendFile(filepath, ' ', cb);
+    }
+
+    function cleanup(cb) {
+      fs.unlink(filepath, cb);
     }
 
     function countEditedFiles() {
@@ -138,7 +143,7 @@ describe('integrations', function() {
         }));
     }
 
-    taker.series(setup, 'build', userWait, userEdit, countEditedFiles, function(cb) {
+    taker.series(setup, 'build', userWait, userEdit, countEditedFiles, cleanup, function(cb) {
       expect(count).toEqual(1);
       cb();
     })(done);

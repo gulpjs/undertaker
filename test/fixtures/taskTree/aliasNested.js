@@ -6,22 +6,22 @@ module.exports = {
     {
       label: 'noop',
       type: 'task',
-      nodes: []
+      nodes: [],
     },
     {
       label: 'fn1',
       type: 'task',
-      nodes: []
+      nodes: [],
     },
     {
       label: 'fn2',
       type: 'task',
-      nodes: []
+      nodes: [],
     },
     {
       label: 'fn3',
       type: 'task',
-      nodes: []
+      nodes: [],
     },
     {
       label: 'ser',
@@ -35,31 +35,31 @@ module.exports = {
             {
               label: 'noop',
               type: 'function',
-              nodes: []
+              nodes: [],
             },
             {
               label: '<anonymous>',
               type: 'function',
-              nodes: []
+              nodes: [],
             },
             {
               label: 'fn1',
               type: 'task',
-              nodes: []
+              nodes: [],
             },
             {
               label: 'fn2',
               type: 'task',
-              nodes: []
+              nodes: [],
             },
             {
               label: 'fn3',
               type: 'task',
-              nodes: []
-            }
-          ]
-        }
-      ]
+              nodes: [],
+            },
+          ],
+        },
+      ],
     },
     {
       label: 'par',
@@ -73,31 +73,31 @@ module.exports = {
             {
               label: 'noop',
               type: 'function',
-              nodes: []
+              nodes: [],
             },
             {
               label: '<anonymous>',
               type: 'function',
-              nodes: []
+              nodes: [],
             },
             {
               label: 'fn1',
               type: 'task',
-              nodes: []
+              nodes: [],
             },
             {
               label: 'fn2',
               type: 'task',
-              nodes: []
+              nodes: [],
             },
             {
               label: 'fn3',
               type: 'task',
-              nodes: []
-            }
-          ]
-        }
-      ]
-    }
+              nodes: [],
+            },
+          ],
+        },
+      ],
+    },
   ],
 };
