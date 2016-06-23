@@ -1,11 +1,6 @@
 'use strict';
 
-var lab = exports.lab = require('lab').script();
-var expect = require('code').expect;
-
-var describe = lab.describe;
-var it = lab.it;
-var beforeEach = lab.beforeEach;
+var expect = require('expect');
 
 var fs = require('fs');
 var path = require('path');
@@ -82,7 +77,7 @@ describe('integrations', function() {
     ));
 
     taker.parallel('build')(function(err) {
-      expect(count).to.equal(1);
+      expect(count).toEqual(1);
       done(err);
     });
   });
@@ -108,7 +103,7 @@ describe('integrations', function() {
     ));
 
     taker.parallel('build')(function(err) {
-      expect(count).to.equal(1);
+      expect(count).toEqual(1);
       done(err);
     });
   });
@@ -144,7 +139,7 @@ describe('integrations', function() {
     }
 
     taker.series(setup, 'build', userWait, userEdit, countEditedFiles, function(cb) {
-      expect(count).to.be.equal(1);
+      expect(count).toEqual(1);
       cb();
     })(done);
   });

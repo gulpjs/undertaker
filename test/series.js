@@ -1,11 +1,6 @@
 'use strict';
 
-var lab = exports.lab = require('lab').script();
-var expect = require('code').expect;
-
-var describe = lab.describe;
-var it = lab.it;
-var beforeEach = lab.beforeEach;
+var expect = require('expect');
 
 var Undertaker = require('../');
 
@@ -41,21 +36,21 @@ describe('series', function() {
 
   it('should take all string names', function(done) {
     taker.series('test1', 'test2', 'test3')(function(err, results) {
-      expect(results).to.deep.equal([1, 2, 3]);
+      expect(results).toEqual([1, 2, 3]);
       done(err);
     });
   });
 
   it('should take all functions', function(done) {
     taker.series(fn1, fn2, fn3)(function(err, results) {
-      expect(results).to.deep.equal([1, 2, 3]);
+      expect(results).toEqual([1, 2, 3]);
       done(err);
     });
   });
 
   it('should take string names and functions', function(done) {
     taker.series('test1', fn2, 'test3')(function(err, results) {
-      expect(results).to.deep.equal([1, 2, 3]);
+      expect(results).toEqual([1, 2, 3]);
       done(err);
     });
   });
@@ -63,7 +58,7 @@ describe('series', function() {
   it('should take nested series', function(done) {
     var series1 = taker.series('test1', 'test2', 'test3');
     taker.series('test1', series1, 'test3')(function(err, results) {
-      expect(results).to.deep.equal([1, [1, 2, 3], 3]);
+      expect(results).toEqual([1, [1, 2, 3], 3]);
       done(err);
     });
   });
@@ -73,8 +68,8 @@ describe('series', function() {
       // To keep the test from catching the emitted errors
     });
     taker.series('test1', 'error', 'test3')(function(err, results) {
-      expect(err).to.be.an.instanceof(Error);
-      expect(results).to.deep.equal([1, undefined, undefined]);
+      expect(err).toBeAn(Error);
+      expect(results).toEqual([1, undefined, undefined]);
       done();
     });
   });
@@ -84,7 +79,7 @@ describe('series', function() {
       taker.series('unregistered');
     }
 
-    expect(unregistered).to.throw('Task never defined: unregistered');
+    expect(unregistered).toThrow('Task never defined: unregistered');
     done();
   });
 
@@ -94,8 +89,8 @@ describe('series', function() {
     });
     taker._settle = true;
     taker.series(taker.series('test1', 'error'), 'test3')(function(err, results) {
-      expect(err[0][0]).to.be.an.instanceof(Error);
-      expect(results).to.deep.equal([3]);
+      expect(err[0][0]).toBeAn(Error);
+      expect(results).toEqual([3]);
       done();
     });
   });

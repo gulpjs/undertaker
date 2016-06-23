@@ -1,11 +1,6 @@
 'use strict';
 
-var lab = exports.lab = require('lab').script();
-var expect = require('code').expect;
-
-var describe = lab.describe;
-var it = lab.it;
-var beforeEach = lab.beforeEach;
+var expect = require('expect');
 
 var Undertaker = require('../');
 
@@ -57,7 +52,7 @@ describe('tree', function() {
 
     var tree = taker.tree();
 
-    expect(tree).to.deep.equal(simple);
+    expect(tree).toEqual(simple);
     done();
   });
 
@@ -71,7 +66,7 @@ describe('tree', function() {
 
     var tree = taker.tree({ deep: true });
 
-    expect(tree).to.deep.equal(singleLevel);
+    expect(tree).toEqual(singleLevel);
     done();
   });
 
@@ -86,7 +81,7 @@ describe('tree', function() {
 
     var tree = taker.tree({ deep: true });
 
-    expect(tree).to.deep.equal(doubleLevel);
+    expect(tree).toEqual(doubleLevel);
     done();
   });
 
@@ -100,7 +95,7 @@ describe('tree', function() {
 
     var tree = taker.tree({ deep: true });
 
-    expect(tree).to.deep.equal(tripleLevel);
+    expect(tree).toEqual(tripleLevel);
     done();
   });
 
@@ -116,7 +111,7 @@ describe('tree', function() {
 
     var tree = taker.tree({ deep: true });
 
-    expect(tree).to.deep.equal(aliasSimple);
+    expect(tree).toEqual(aliasSimple);
     done();
   });
 
@@ -133,7 +128,7 @@ describe('tree', function() {
 
     var tree = taker.tree({ deep: true });
 
-    expect(tree).to.deep.equal(aliasNested);
+    expect(tree).toEqual(aliasNested);
     done();
   });
 

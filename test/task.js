@@ -1,11 +1,6 @@
 'use strict';
 
-var lab = exports.lab = require('lab').script();
-var expect = require('code').expect;
-
-var describe = lab.describe;
-var it = lab.it;
-var beforeEach = lab.beforeEach;
+var expect = require('expect');
 
 var Undertaker = require('../');
 
@@ -25,20 +20,20 @@ describe('task', function() {
 
   it('should register a named function', function(done) {
     taker.task(noop);
-    expect(taker.task('noop').unwrap()).to.equal(noop);
+    expect(taker.task('noop').unwrap()).toEqual(noop);
     done();
   });
 
   it('should register an anonymous function by string name', function(done) {
     taker.task('test1', anon);
-    expect(taker.task('test1').unwrap()).to.equal(anon);
+    expect(taker.task('test1').unwrap()).toEqual(anon);
     done();
   });
 
   it('should register an anonymous function by displayName property', function(done) {
     anon.displayName = '<display name>';
     taker.task(anon);
-    expect(taker.task('<display name>').unwrap()).to.equal(anon);
+    expect(taker.task('<display name>').unwrap()).toEqual(anon);
     delete anon.displayName;
     done();
   });
@@ -48,45 +43,45 @@ describe('task', function() {
       taker.task(anon);
     }
 
-    expect(noName).to.throw(Error, 'Task name must be specified');
+    expect(noName).toThrow('Task name must be specified');
     done();
   });
 
   it('should register a named function by string name', function(done) {
     taker.task('test1', noop);
-    expect(taker.task('test1').unwrap()).to.equal(noop);
+    expect(taker.task('test1').unwrap()).toEqual(noop);
     done();
   });
 
   it('should not get a task that was not registered', function(done) {
-    expect(taker.task('test1')).to.be.undefined();
+    expect(taker.task('test1')).toEqual(undefined);
     done();
   });
 
   it('should get a task that was registered', function(done) {
     taker.task('test1', noop);
-    expect(taker.task('test1').unwrap()).to.equal(noop);
+    expect(taker.task('test1').unwrap()).toEqual(noop);
     done();
   });
 
   it('should get the wrapped task, not original function', function(done) {
     var registry = taker.registry();
     taker.task('test1', noop);
-    expect(taker.task('test1').unwrap).to.be.a.function();
-    expect(taker.task('test1')).to.equal(registry.get('test1'));
+    expect(taker.task('test1').unwrap).toBeA('function');
+    expect(taker.task('test1')).toEqual(registry.get('test1'));
     done();
   });
 
   it('provides an `unwrap` method to get the original function', function(done) {
     taker.task('test1', noop);
-    expect(taker.task('test1').unwrap).to.be.a.function();
-    expect(taker.task('test1').unwrap()).to.equal(noop);
+    expect(taker.task('test1').unwrap).toBeA('function');
+    expect(taker.task('test1').unwrap()).toEqual(noop);
     done();
   });
 
   it('should return a function that was registered in some other way', function(done) {
     taker.registry()._tasks.test1 = noop;
-    expect(taker.task('test1')).to.equal(noop);
+    expect(taker.task('test1')).toEqual(noop);
     done();
   });
 
@@ -94,7 +89,7 @@ describe('task', function() {
     function fn() {}
     fn.displayName = 'test1';
     taker.task(fn);
-    expect(taker.task('test1').unwrap()).to.equal(fn);
+    expect(taker.task('test1').unwrap()).toEqual(fn);
     done();
   });
 
@@ -102,7 +97,7 @@ describe('task', function() {
     function fn() {}
     taker.task('foo', fn);
     taker.task('bar', fn);
-    expect(taker.task('foo').unwrap()).to.equal(taker.task('bar').unwrap());
+    expect(taker.task('foo').unwrap()).toEqual(taker.task('bar').unwrap());
     done();
   });
 
@@ -117,13 +112,13 @@ describe('task', function() {
     taker.task('bar', fn);
 
     taker.series('foo', 'bar', function(cb) {
-      expect(count).to.equal(2);
+      expect(count).toEqual(2);
       cb();
     });
 
     taker.parallel('foo', 'bar', function(cb) {
       setTimeout(function(){
-        expect(count).to.equal(4);
+        expect(count).toEqual(4);
         cb();
       }, 500);
     });
@@ -149,13 +144,13 @@ describe('task', function() {
     taker.task('bar', taker.task('par'));
 
     taker.series('foo', function(cb) {
-      expect(count).to.equal(3);
+      expect(count).toEqual(3);
       cb();
     });
 
     taker.series('bar', function(cb) {
       setTimeout(function(){
-        expect(count).to.equal(6);
+        expect(count).toEqual(6);
         cb();
       }, 500);
 

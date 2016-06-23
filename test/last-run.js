@@ -1,12 +1,6 @@
 'use strict';
 
-var lab = exports.lab = require('lab').script();
-var expect = require('code').expect;
-
-var describe = lab.describe;
-var it = lab.it;
-var beforeEach = lab.beforeEach;
-var afterEach = lab.afterEach;
+var expect = require('expect');
 
 var Undertaker = require('../');
 
@@ -57,44 +51,42 @@ describe('lastRun', function() {
     };
     taker.task('test', test);
     taker.parallel('test')(function(err) {
-      expect(ts).to.be.undefined();
+      expect(ts).toEqual(undefined);
       done(err);
     });
   });
 
   it('should record tasks time execution', function(done) {
-    var since = Date.now();
     taker.parallel('test1')(function(err) {
-      expect(taker.lastRun('test1')).to.exist();
-      expect(taker.lastRun('test1')).to.be.within(since, Date.now());
-      expect(taker.lastRun(test2)).to.not.exist();
-      expect(taker.lastRun(function() {})).to.not.exist();
-      expect(taker.lastRun.bind(taker, 'notexists')).to.throw(Error);
+      expect(taker.lastRun('test1')).toExist();
+      expect(taker.lastRun('test1')).toBeLessThanOrEqualTo(Date.now());
+      expect(taker.lastRun(test2)).toNotExist();
+      expect(taker.lastRun(function() {})).toNotExist();
+      expect(taker.lastRun.bind(taker, 'notexists')).toThrow(Error);
       done(err);
     });
   });
 
   it('should record all tasks time execution', function(done) {
-    var since = Date.now();
     taker.parallel('test1', test2)(function(err) {
-      expect(taker.lastRun('test1')).to.exist();
-      expect(taker.lastRun('test1')).to.be.within(since, Date.now());
-      expect(taker.lastRun(test2)).to.exist();
-      expect(taker.lastRun(test2)).to.be.within(since, Date.now());
+      expect(taker.lastRun('test1')).toExist();
+      expect(taker.lastRun('test1')).toBeLessThanOrEqualTo(Date.now());
+      expect(taker.lastRun(test2)).toExist();
+      expect(taker.lastRun(test2)).toBeLessThanOrEqualTo(Date.now());
       done(err);
     });
   });
 
   it('should record same tasks time execution for a string task and its original', function(done) {
     taker.series(test2)(function(err) {
-      expect(taker.lastRun(test2)).to.equal(taker.lastRun('test2'));
+      expect(taker.lastRun(test2)).toEqual(taker.lastRun('test2'));
       done(err);
     });
   });
 
   it('should record tasks time execution for an aliased task', function(done) {
     taker.series('alias')(function(err) {
-      expect(taker.lastRun('alias')).to.equal(taker.lastRun('test1'));
+      expect(taker.lastRun('alias')).toEqual(taker.lastRun('test1'));
       done(err);
     });
   });
@@ -105,7 +97,7 @@ describe('lastRun', function() {
     var expected = since - (since % resolution);
 
     taker.series('test1')(function() {
-      expect(taker.lastRun('test1', resolution)).to.equal(expected);
+      expect(taker.lastRun('test1', resolution)).toEqual(expected);
       done();
     });
   });
@@ -115,8 +107,8 @@ describe('lastRun', function() {
       // To keep the test from catching the emitted errors
     });
     taker.series('error')(function(err) {
-      expect(err).to.exist();
-      expect(taker.lastRun('error')).to.not.exist();
+      expect(err).toExist();
+      expect(taker.lastRun('error')).toNotExist();
       done();
     });
   });
