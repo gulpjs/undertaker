@@ -40,7 +40,7 @@ describe('task', function() {
 
   it('should throw on register an anonymous function without string name', function(done) {
     function noName() {
-      taker.task(anon);
+      taker.task(function() {});
     }
 
     expect(noName).toThrow('Task name must be specified');
