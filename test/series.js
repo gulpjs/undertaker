@@ -34,6 +34,24 @@ describe('series', function() {
     done();
   });
 
+  it('should not take an empty array', function(done) {
+    function emptyArray() {
+      taker.series([]);
+    }
+
+    expect(emptyArray).toThrow('Empty array as argument');
+    done();
+  });
+
+  it('should not take objects', function(done) {
+    function objectAsArgument() {
+      taker.series(['test1',{}]);
+    }
+
+    expect(objectAsArgument).toThrow('Task never defined:');
+    done();
+  });
+
   it('should take only one array of registered tasks', function(done) {
     taker.series(['test1', 'test2', 'test3'])(function(err, results) {
       expect(results).toEqual([1, 2, 3]);
