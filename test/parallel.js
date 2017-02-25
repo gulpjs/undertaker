@@ -34,12 +34,21 @@ describe('parallel', function() {
     done();
   });
 
+  it('should not take an empty argument', function(done) {
+    function emptyArgument() {
+      taker.parallel();
+    }
+
+    expect(emptyArgument).toThrow('Empty array as argument or no argument');
+    done();
+  });
+
   it('should not take an empty array', function(done) {
     function emptyArray() {
       taker.parallel([]);
     }
 
-    expect(emptyArray).toThrow('Empty array as argument');
+    expect(emptyArray).toThrow('Empty array as argument or no argument');
     done();
   });
 
