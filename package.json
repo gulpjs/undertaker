@@ -26,7 +26,9 @@
     "coveralls": "npm run cover && istanbul-coveralls"
   },
   "dependencies": {
+    "arr-flatten": "^1.0.1",
     "bach": "^1.0.0",
+    "collection-map": "^0.1.0",
     "es6-weak-map": "^2.0.1",
     "last-run": "^1.1.0",
     "object.defaults": "^0.3.0",
