@@ -34,6 +34,13 @@ describe('series', function() {
     done();
   });
 
+  it('should take only one array of registered tasks', function(done) {
+    taker.series(['test1', 'test2', 'test3'])(function(err, results) {
+      expect(results).toEqual([1, 2, 3]);
+      done(err);
+    });
+  });
+
   it('should take all string names', function(done) {
     taker.series('test1', 'test2', 'test3')(function(err, results) {
       expect(results).toEqual([1, 2, 3]);
