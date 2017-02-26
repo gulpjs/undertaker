@@ -1,6 +1,6 @@
 {
   "name": "undertaker",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Task registry that allows composition through series/parallel methods.",
   "author": "Gulp Team <team@gulpjs.com> (http://gulpjs.com/)",
   "contributors": [
