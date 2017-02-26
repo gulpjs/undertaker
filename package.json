@@ -26,13 +26,14 @@
     "coveralls": "npm run cover && istanbul-coveralls"
   },
   "dependencies": {
+    "arr-flatten": "^1.0.1",
+    "arr-map": "^2.0.0",
     "bach": "^1.0.0",
+    "collection-map": "^0.1.0",
     "es6-weak-map": "^2.0.1",
     "last-run": "^1.1.0",
-    "lodash.defaults": "^4.0.1",
-    "lodash.flatten": "^4.0.0",
-    "lodash.map": "^4.1.0",
-    "lodash.reduce": "^4.1.0",
+    "object.defaults": "^0.3.0",
+    "object.reduce": "^0.1.7",
     "undertaker-registry": "^1.0.0"
   },
   "devDependencies": {
