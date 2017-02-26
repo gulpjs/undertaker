@@ -34,6 +34,33 @@ describe('parallel', function() {
     done();
   });
 
+  it('should not take an empty argument', function(done) {
+    function emptyArgument() {
+      taker.parallel();
+    }
+
+    expect(emptyArgument).toThrow('Empty array as argument or no argument');
+    done();
+  });
+
+  it('should not take an empty array', function(done) {
+    function emptyArray() {
+      taker.parallel([]);
+    }
+
+    expect(emptyArray).toThrow('Empty array as argument or no argument');
+    done();
+  });
+
+  it('should not take objects', function(done) {
+    function objectAsArgument() {
+      taker.parallel(['test1',{}]);
+    }
+
+    expect(objectAsArgument).toThrow('Task never defined:');
+    done();
+  });
+
   it('should take only one array of registered tasks', function(done) {
     taker.parallel(['test1', 'test2', 'test3'])(function(err, results) {
       expect(results).toEqual([1, 2, 3]);
