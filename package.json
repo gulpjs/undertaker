@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "arr-flatten": "^1.0.1",
+    "arr-map": "^2.0.0",
     "bach": "^1.0.0",
     "collection-map": "^0.1.0",
     "es6-weak-map": "^2.0.1",
