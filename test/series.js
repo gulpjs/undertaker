@@ -43,7 +43,7 @@ describe('series', function() {
     done();
   });
 
-  it('should throw on empty object on registered tasks array', function(done) {
+  it('should throw on tasks array with both valid and non-valid tasks', function(done) {
     function fail() {
       taker.series(['test1', 'test2', 'test3', {}]);
     }
@@ -52,7 +52,7 @@ describe('series', function() {
     done();
   });
 
-  it('should throw on empty object of registered task', function(done) {
+  it('should throw on non-valid task', function(done) {
     function fail() {
       taker.series({});
     }
@@ -61,7 +61,7 @@ describe('series', function() {
     done();
   });
 
-  it('should throw on non registered tasks', function(done) {
+  it('should throw when no tasks specified', function(done) {
     function fail() {
       taker.series();
     }
