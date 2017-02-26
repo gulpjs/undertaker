@@ -34,6 +34,51 @@ describe('series', function() {
     done();
   });
 
+  it('should throw on non-valid tasks combined with valid tasks', function(done) {
+    function fail() {
+      taker.series('test1', 'test2', 'test3', {});
+    }
+
+    expect(fail).toThrow(/Task never defined:/);
+    done();
+  });
+
+  it('should throw on empty object on registered tasks array', function(done) {
+    function fail() {
+      taker.series(['test1', 'test2', 'test3', {}]);
+    }
+
+    expect(fail).toThrow(/Task never defined:/);
+    done();
+  });
+
+  it('should throw on empty object of registered task', function(done) {
+    function fail() {
+      taker.series({});
+    }
+
+    expect(fail).toThrow(/Task never defined:/);
+    done();
+  });
+
+  it('should throw on non registered tasks', function(done) {
+    function fail() {
+      taker.series();
+    }
+
+    expect(fail).toThrow(/One or more tasks should be combined using series or parallel/);
+    done();
+  });
+
+  it('should throw on empty array of registered tasks', function(done) {
+    function fail() {
+      taker.series([]);
+    }
+
+    expect(fail).toThrow(/One or more tasks should be combined using series or parallel/);
+    done();
+  });
+
   it('should take only one array of registered tasks', function(done) {
     taker.series(['test1', 'test2', 'test3'])(function(err, results) {
       expect(results).toEqual([1, 2, 3]);

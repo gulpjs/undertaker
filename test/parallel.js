@@ -34,6 +34,51 @@ describe('parallel', function() {
     done();
   });
 
+  it('should throw on non-valid tasks combined with valid tasks', function(done) {
+    function fail() {
+      taker.parallel('test1', 'test2', 'test3', {});
+    }
+
+    expect(fail).toThrow(/Task never defined:/);
+    done();
+  });
+
+  it('should throw on tasks array with both valid and non-valid tasks', function(done) {
+    function fail() {
+      taker.parallel(['test1', 'test2', 'test3', {}]);
+    }
+
+    expect(fail).toThrow(/Task never defined:/);
+    done();
+  });
+
+  it('should throw on non-valid task', function(done) {
+    function fail() {
+      taker.parallel({});
+    }
+
+    expect(fail).toThrow(/Task never defined:/);
+    done();
+  });
+
+  it('should throw when no tasks specified', function(done) {
+    function fail() {
+      taker.parallel();
+    }
+
+    expect(fail).toThrow(/One or more tasks should be combined using series or parallel/);
+    done();
+  });
+
+  it('should throw on empty array of registered tasks', function(done) {
+    function fail() {
+      taker.parallel([]);
+    }
+
+    expect(fail).toThrow(/One or more tasks should be combined using series or parallel/);
+    done();
+  });
+
   it('should take only one array of registered tasks', function(done) {
     taker.parallel(['test1', 'test2', 'test3'])(function(err, results) {
       expect(results).toEqual([1, 2, 3]);
