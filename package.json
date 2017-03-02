@@ -32,8 +32,8 @@
     "collection-map": "^1.0.0",
     "es6-weak-map": "^2.0.1",
     "last-run": "^1.1.0",
-    "object.defaults": "^0.3.0",
-    "object.reduce": "^0.1.7",
+    "object.defaults": "^1.0.0",
+    "object.reduce": "^1.0.0",
     "undertaker-registry": "^1.0.0"
   },
   "devDependencies": {
