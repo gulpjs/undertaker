@@ -29,7 +29,7 @@
     "arr-flatten": "^1.0.1",
     "arr-map": "^2.0.0",
     "bach": "^1.0.0",
-    "collection-map": "^0.1.0",
+    "collection-map": "^1.0.0",
     "es6-weak-map": "^2.0.1",
     "last-run": "^1.1.0",
     "object.defaults": "^0.3.0",
