@@ -204,7 +204,7 @@ CommonRegistry.prototype.init = function(takerInst){
   var buildDir = this.buildDir;
   var exists = fs.existsSync(buildDir);
 
-  if(exists){
+  if (exists) {
     throw new Error('Cannot initialize common tasks. ' + buildDir + ' directory exists.');
   }
 
@@ -219,7 +219,7 @@ module.exports = CommonRegistry;
 Then to use it in a project:
 ```js
 var Undertaker = require('undertaker');
-var CommonRegistry = require('myorg-common-tasks');
+var CommonRegistry = require('./myorg-common-tasks');
 
 var taker = new Undertaker(CommonRegistry({ buildDir: '/dist' }));
 
