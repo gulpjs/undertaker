@@ -111,19 +111,19 @@ describe('task', function() {
     taker.task('foo', fn);
     taker.task('bar', fn);
 
-    taker.series('foo', 'bar', function(cb) {
+    var series = taker.series('foo', 'bar', function(cb) {
       expect(count).toEqual(2);
       cb();
     });
 
-    taker.parallel('foo', 'bar', function(cb) {
+    var parallel = taker.parallel('foo', 'bar', function(cb) {
       setTimeout(function() {
         expect(count).toEqual(4);
         cb();
       }, 500);
     });
 
-    done();
+    taker.series(series, parallel)(done);
   });
 
   it('should allow composite tasks tasks to be aliased', function(done) {
@@ -143,20 +143,19 @@ describe('task', function() {
     taker.task('par', taker.parallel(fn1, fn2));
     taker.task('bar', taker.task('par'));
 
-    taker.series('foo', function(cb) {
+    var series = taker.series('foo', function(cb) {
       expect(count).toEqual(3);
       cb();
     });
 
-    taker.series('bar', function(cb) {
+    var parallel = taker.series('bar', function(cb) {
       setTimeout(function() {
         expect(count).toEqual(6);
         cb();
       }, 500);
-
     });
 
-    done();
+    taker.series(series, parallel)(done);
   });
 
 });
