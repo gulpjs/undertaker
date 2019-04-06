@@ -100,6 +100,30 @@ describe('tree', function() {
     done();
   });
 
+  it('should form a 3 level nested tree with displayName alias', function(done) {
+    var fn1 = taker.parallel(function(cb) {
+      cb();
+    }, noop);
+    fn1.displayName = 'fn1';
+
+    var fn2 = taker.parallel(function(cb) {
+      cb();
+    }, noop);
+    fn2.displayName = 'fn2';
+
+    var fn3 = taker.series(fn1, fn2);
+    fn3.displayName = 'fn3';
+
+    taker.task(fn1);
+    taker.task(fn2);
+    taker.task(fn3);
+
+    var tree = taker.tree({ deep: true });
+
+    expect(tree).toEqual(tripleLevel);
+    done();
+  });
+
   it('should use the proper labels for aliased tasks (simple)', function(done) {
     var anon = function(cb) {
       cb();
