@@ -147,4 +147,9 @@ describe('series', function() {
     });
   });
 
+  it('should not register a displayName on the returned function by default', function(done) {
+    var task = taker.series(fn1);
+    expect(task.displayName).toEqual(undefined);
+    done();
+  });
 });

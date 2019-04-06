@@ -146,4 +146,10 @@ describe('parallel', function() {
       done();
     });
   });
+
+  it('should not register a displayName on the returned function by default', function(done) {
+    var task = taker.parallel(fn1);
+    expect(task.displayName).toEqual(undefined);
+    done();
+  });
 });
