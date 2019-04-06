@@ -122,7 +122,7 @@ Type: `Boolean`
 
 Default: `false`
 
-### `lastRun(task, [timeResolution])`
+### `lastRun(task, [precision])`
 
 Takes a string or function (`task`) and returns a timestamp of the last time the task
 was run successfully. The time will be the time the task started.
@@ -133,7 +133,7 @@ If a task errors, the result of `lastRun` will be undefined because the task
 should probably be re-run from scratch to get into a good state again.
 
 The timestamp is always given in millisecond but the time resolution can be
-rounded using the `timeResolution` parameter. The use case is to be able to compare a build time
+rounded using the `precision` parameter. The use case is to be able to compare a build time
 to a file time attribute. On node v0.10 or with file system like HFS or FAT,
 `fs.stat` time attributes like `mtime` precision is one second.
 
