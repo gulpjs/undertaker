@@ -310,3 +310,15 @@ MIT
 
 [gitter-url]: https://gitter.im/gulpjs/gulp
 [gitter-image]: https://badges.gitter.im/gulpjs/gulp.svg
+
+[custom-registries]: #custom-registries
+[async-resolution]: https://github.com/phated/async-done#completion-and-error-resolution
+[archy]: https://www.npmjs.org/package/archy
+[undertaker-registry]: https://github.com/gulpjs/undertaker-registry
+[undertaker-forward-reference]: https://github.com/gulpjs/undertaker-forward-reference
+[undertaker-task-metadata]: https://github.com/gulpjs/undertaker-task-metadata
+[undertaker-common-tasks]: https://github.com/gulpjs/undertaker-common-tasks
+[alchemist-gulp]: https://github.com/webdesserts/alchemist-gulp
+[gulp-hub]: https://github.com/frankwallis/gulp-hub/tree/registry-init
+[gulp-pipeline]: https://github.com/alienfast/gulp-pipeline
+[rails-registry]: https://github.com/alienfast/gulp-pipeline/blob/master/src/registry/railsRegistry.js
