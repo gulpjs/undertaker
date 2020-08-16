@@ -147,7 +147,7 @@ describe('registry', function() {
     });
 
     it('should throw upon invalid registry', function(done) {
-      /*eslint no-unused-vars: 0*/
+      /* eslint no-unused-vars: 0 */
       var taker;
 
       function noGet() {
