@@ -34,7 +34,8 @@
     "last-run": "^1.1.0",
     "object.defaults": "^1.0.0",
     "object.reduce": "^1.0.0",
-    "undertaker-registry": "^1.0.0"
+    "undertaker-registry": "^1.0.0",
+    "fast-levenshtein": "^1.0.0"
   },
   "devDependencies": {
     "async-once": "^1.0.0",

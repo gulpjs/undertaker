@@ -194,4 +194,16 @@ describe('registry', function() {
     taker.series('test')();
   });
 
+  it('should fail and offer tasks which are close in name', function(done) {
+    var taker = new Undertaker(new CommonRegistry());
+    var customRegistry = new DefaultRegistry();
+    taker.registry(customRegistry);
+
+    function fail() {
+      taker.series('clear');
+    }
+
+    expect(fail).toThrow(/Task never defined: clear - did you mean\? clean/);
+    done();
+  });
 });
