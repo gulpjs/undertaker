@@ -6,9 +6,7 @@
 
 # undertaker
 
-[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url] [![Coveralls Status][coveralls-image]][coveralls-url] [![Gitter chat][gitter-image]][gitter-url]
-
-Task registry that allows composition through `series`/`parallel` methods.
+[![NPM version][npm-image]][npm-url] [![Downloads][downloads-image]][npm-url] [![Azure Pipelines Build Status][azure-pipelines-image]][azure-pipelines-url] [![Travis Build Status][travis-image]][travis-url] [![AppVeyor Build Status][appveyor-image]][appveyor-url] [![Coveralls Status][coveralls-image]][coveralls-url] [![Gitter chat][gitter-image]][gitter-url]
 
 ## Usage
 
@@ -294,30 +292,21 @@ taker.task('default', taker.series('clean', 'build', 'serve', function(cb) {
 
 MIT
 
-[custom-registries]: #custom-registries
-[async-resolution]: https://github.com/phated/async-done#completion-and-error-resolution
-[archy]: https://www.npmjs.org/package/archy
-[undertaker-registry]: https://github.com/gulpjs/undertaker-registry
-[undertaker-forward-reference]: https://github.com/gulpjs/undertaker-forward-reference
-[undertaker-task-metadata]: https://github.com/gulpjs/undertaker-task-metadata
-[undertaker-common-tasks]: https://github.com/gulpjs/undertaker-common-tasks
-[alchemist-gulp]: https://github.com/webdesserts/alchemist-gulp
-[gulp-hub]: https://github.com/frankwallis/gulp-hub/tree/registry-init
-[gulp-pipeline]: https://github.com/alienfast/gulp-pipeline
-[rails-registry]: https://github.com/alienfast/gulp-pipeline/blob/master/src/registry/railsRegistry.js
-
-[downloads-image]: http://img.shields.io/npm/dm/undertaker.svg
+[downloads-image]: https://img.shields.io/npm/dm/undertaker.svg
 [npm-url]: https://www.npmjs.com/package/undertaker
-[npm-image]: http://img.shields.io/npm/v/undertaker.svg
+[npm-image]: https://img.shields.io/npm/v/undertaker.svg
+
+[azure-pipelines-url]: https://dev.azure.com/gulpjs/gulp/_build/latest?definitionId=$PROJECT_ID&branchName=master
+[azure-pipelines-image]: https://dev.azure.com/gulpjs/gulp/_apis/build/status/undertaker?branchName=master
 
 [travis-url]: https://travis-ci.org/gulpjs/undertaker
-[travis-image]: http://img.shields.io/travis/gulpjs/undertaker.svg?label=travis-ci
+[travis-image]: https://img.shields.io/travis/gulpjs/undertaker.svg?label=travis-ci
 
 [appveyor-url]: https://ci.appveyor.com/project/gulpjs/undertaker
 [appveyor-image]: https://img.shields.io/appveyor/ci/gulpjs/undertaker.svg?label=appveyor
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/undertaker
-[coveralls-image]: http://img.shields.io/coveralls/gulpjs/undertaker/master.svg
+[coveralls-image]: https://img.shields.io/coveralls/gulpjs/undertaker/master.svg
 
 [gitter-url]: https://gitter.im/gulpjs/gulp
 [gitter-image]: https://badges.gitter.im/gulpjs/gulp.svg
