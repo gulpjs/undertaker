@@ -5,12 +5,8 @@ var expect = require('expect');
 var Undertaker = require('../');
 
 describe('lastRun', function() {
-  var taker;
+  var taker, test1, test2, error, alias;
   var defaultResolution = process.env.UNDERTAKER_TIME_RESOLUTION;
-  var test1;
-  var test2;
-  var error;
-  var alias;
 
   beforeEach(function(done) {
     process.env.UNDERTAKER_TIME_RESOLUTION = '0';

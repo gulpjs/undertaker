@@ -24,6 +24,8 @@ function cleanup() {
   ]);
 }
 
+function noop() { }
+
 describe('integrations', function() {
 
   var taker;
@@ -65,7 +67,7 @@ describe('integrations', function() {
   it('should handle a child process return', function(done) {
     taker.task('test', function() {
       if (isWindows) {
-        return spawn('cmd', ['/c', 'dir']).on('error', console.log);
+        return spawn('cmd', ['/c', 'dir']).on('error', noop);
       }
 
       return spawn('ls', ['-lh', __dirname]);
