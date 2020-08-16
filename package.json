@@ -41,7 +41,7 @@
     "async-once": "^1.0.0",
     "coveralls": "github:phated/node-coveralls#2.x",
     "del": "^2.0.2",
-    "eslint": "^2.13.1",
+    "eslint": "^7.7.0",
     "eslint-config-gulp": "^3.0.1",
     "expect": "^1.20.2",
     "gulp-jshint": "^1.8.4",
