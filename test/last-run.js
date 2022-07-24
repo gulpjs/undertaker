@@ -54,10 +54,10 @@ describe('lastRun', function() {
 
   it('should record tasks time execution', function(done) {
     taker.parallel('test1')(function(err) {
-      expect(taker.lastRun('test1')).toExist();
-      expect(taker.lastRun('test1')).toBeLessThanOrEqualTo(Date.now());
-      expect(taker.lastRun(test2)).toNotExist();
-      expect(taker.lastRun(function() {})).toNotExist();
+      expect(taker.lastRun('test1')).toBeTruthy();
+      expect(taker.lastRun('test1')).toBeLessThanOrEqual(Date.now());
+      expect(taker.lastRun(test2)).toBeFalsy();
+      expect(taker.lastRun(function() {})).toBeFalsy();
       expect(taker.lastRun.bind(taker, 'notexists')).toThrow(Error);
       done(err);
     });
@@ -65,10 +65,10 @@ describe('lastRun', function() {
 
   it('should record all tasks time execution', function(done) {
     taker.parallel('test1', test2)(function(err) {
-      expect(taker.lastRun('test1')).toExist();
-      expect(taker.lastRun('test1')).toBeLessThanOrEqualTo(Date.now());
-      expect(taker.lastRun(test2)).toExist();
-      expect(taker.lastRun(test2)).toBeLessThanOrEqualTo(Date.now());
+      expect(taker.lastRun('test1')).toBeTruthy();
+      expect(taker.lastRun('test1')).toBeLessThanOrEqual(Date.now());
+      expect(taker.lastRun(test2)).toBeTruthy();
+      expect(taker.lastRun(test2)).toBeLessThanOrEqual(Date.now());
       done(err);
     });
   });
@@ -103,8 +103,8 @@ describe('lastRun', function() {
       // To keep the test from catching the emitted errors
     });
     taker.series('error')(function(err) {
-      expect(err).toExist();
-      expect(taker.lastRun('error')).toNotExist();
+      expect(err).toBeTruthy();
+      expect(taker.lastRun('error')).toBeFalsy();
       done();
     });
   });

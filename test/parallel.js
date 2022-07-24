@@ -120,7 +120,7 @@ describe('parallel', function() {
       // To keep the test from catching the emitted errors
     });
     taker.parallel('test1', 'error', 'test3')(function(err, results) {
-      expect(err).toBeAn(Error);
+      expect(err).toBeInstanceOf(Error);
       expect(results).toEqual([1, undefined, undefined]);
       done();
     });
@@ -141,7 +141,7 @@ describe('parallel', function() {
     });
     taker._settle = true;
     taker.parallel(taker.parallel('test1', 'error'), 'test3')(function(err, results) {
-      expect(err[0][0]).toBeAn(Error);
+      expect(err[0][0]).toBeInstanceOf(Error);
       expect(results).toEqual([3]);
       done();
     });

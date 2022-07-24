@@ -67,14 +67,14 @@ describe('task', function() {
   it('should get the wrapped task, not original function', function(done) {
     var registry = taker.registry();
     taker.task('test1', noop);
-    expect(taker.task('test1').unwrap).toBeA('function');
+    expect(typeof taker.task('test1').unwrap).toEqual('function');
     expect(taker.task('test1')).toEqual(registry.get('test1'));
     done();
   });
 
   it('provides an `unwrap` method to get the original function', function(done) {
     taker.task('test1', noop);
-    expect(taker.task('test1').unwrap).toBeA('function');
+    expect(typeof taker.task('test1').unwrap).toEqual('function');
     expect(taker.task('test1').unwrap()).toEqual(noop);
     done();
   });

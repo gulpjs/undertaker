@@ -65,8 +65,8 @@ describe('registry', function() {
       var customRegistry = new DefaultRegistry();
       taker.registry(customRegistry);
 
-      expect(taker.task('clean')).toBeA('function');
-      expect(taker.task('serve')).toBeA('function');
+      expect(typeof taker.task('clean')).toEqual('function');
+      expect(typeof taker.task('serve')).toEqual('function');
       done();
     });
 
@@ -74,8 +74,8 @@ describe('registry', function() {
       var taker = new Undertaker();
       taker.registry(new CommonRegistry());
 
-      expect(taker.task('clean')).toBeA('function');
-      expect(taker.task('serve')).toBeA('function');
+      expect(typeof taker.task('clean')).toEqual('function');
+      expect(typeof taker.task('serve')).toEqual('function');
 
       taker.registry(new MetadataRegistry());
       taker.task('context', function(cb) {
@@ -86,9 +86,9 @@ describe('registry', function() {
 
       taker.registry(new DefaultRegistry());
 
-      expect(taker.task('clean')).toBeA('function');
-      expect(taker.task('serve')).toBeA('function');
-      expect(taker.task('context')).toBeA('function');
+      expect(typeof taker.task('clean')).toEqual('function');
+      expect(typeof taker.task('serve')).toEqual('function');
+      expect(typeof taker.task('context')).toEqual('function');
 
       taker.series('context')();
     });
@@ -111,8 +111,8 @@ describe('registry', function() {
 
       DefaultRegistry.prototype.init = function(inst) {
         expect(inst).toEqual(taker);
-        expect(inst.task('clean')).toBeA('function');
-        expect(inst.task('serve')).toBeA('function');
+        expect(typeof inst.task('clean')).toEqual('function');
+        expect(typeof inst.task('serve')).toEqual('function');
       };
 
       taker.registry(new DefaultRegistry());
@@ -125,24 +125,24 @@ describe('registry', function() {
   describe('constructor', function() {
     it('should take a custom registry on instantiation', function(done) {
       var taker = new Undertaker(new CustomRegistry());
-      expect(taker.registry()).toBeA(CustomRegistry);
-      expect(taker.registry()).toNotBeA(DefaultRegistry);
+      expect(taker.registry()).toBeInstanceOf(CustomRegistry);
+      expect(taker.registry()).not.toBeInstanceOf(DefaultRegistry);
       done();
     });
 
     it('should default to undertaker-registry if not constructed with custom registry', function(done) {
       var taker = new Undertaker();
-      expect(taker.registry()).toBeA(DefaultRegistry);
-      expect(taker.registry()).toNotBeA(CustomRegistry);
+      expect(taker.registry()).toBeInstanceOf(DefaultRegistry);
+      expect(taker.registry()).not.toBeInstanceOf(CustomRegistry);
       done();
     });
 
     it('should take a registry that pre-defines tasks', function(done) {
       var taker = new Undertaker(new CommonRegistry());
-      expect(taker.registry()).toBeA(CommonRegistry);
-      expect(taker.registry()).toBeA(DefaultRegistry);
-      expect(taker.task('clean')).toBeA('function');
-      expect(taker.task('serve')).toBeA('function');
+      expect(taker.registry()).toBeInstanceOf(CommonRegistry);
+      expect(taker.registry()).toBeInstanceOf(DefaultRegistry);
+      expect(typeof taker.task('clean')).toEqual('function');
+      expect(typeof taker.task('serve')).toEqual('function');
       done();
     });
 

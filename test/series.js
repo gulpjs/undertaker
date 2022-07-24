@@ -120,7 +120,7 @@ describe('series', function() {
       // To keep the test from catching the emitted errors
     });
     taker.series('test1', 'error', 'test3')(function(err, results) {
-      expect(err).toBeAn(Error);
+      expect(err).toBeInstanceOf(Error);
       expect(results).toEqual([1, undefined, undefined]);
       done();
     });
@@ -141,7 +141,7 @@ describe('series', function() {
     });
     taker._settle = true;
     taker.series(taker.series('test1', 'error'), 'test3')(function(err, results) {
-      expect(err[0][0]).toBeAn(Error);
+      expect(err[0][0]).toBeInstanceOf(Error);
       expect(results).toEqual([3]);
       done();
     });
