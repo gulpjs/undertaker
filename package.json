@@ -24,16 +24,10 @@
     "test": "nyc mocha --async-only"
   },
   "dependencies": {
-    "arr-flatten": "^1.0.1",
-    "arr-map": "^2.0.0",
     "bach": "^1.2.0",
-    "collection-map": "^1.0.0",
-    "es6-weak-map": "^2.0.1",
+    "fast-levenshtein": "^3.0.0",
     "last-run": "^2.0.0",
-    "object.defaults": "^1.0.0",
-    "object.reduce": "^1.0.0",
-    "undertaker-registry": "^2.0.0",
-    "fast-levenshtein": "^3.0.0"
+    "undertaker-registry": "^2.0.0"
   },
   "devDependencies": {
     "async-once": "^2.0.0",
