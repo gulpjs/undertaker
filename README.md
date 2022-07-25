@@ -134,14 +134,12 @@ should probably be re-run from scratch to get into a good state again.
 
 The timestamp is always given in millisecond but the time resolution can be
 rounded using the `precision` parameter. The use case is to be able to compare a build time
-to a file time attribute. On node v0.10 or with file system like HFS or FAT,
-`fs.stat` time attributes like `mtime` precision is one second.
+to a file time attribute.
 
 Assuming `undertakerInst.lastRun('someTask')` returns `1426000001111`,
 `undertakerInst.lastRun('someTask', 1000)` returns `1426000001000`.
 
-The default time resolution is `1000` on node v0.10, `0` on node 0.11+ but
-it can be overwritten using `UNDERTAKER_TIME_RESOLUTION` environment variable.
+The default time resolution is `1`.
 
 ## Custom Registries
 
