@@ -54,6 +54,15 @@ describe('integrations', function() {
     taker.parallel('test')(done);
   });
 
+  it('should handle a Transform stream return', function(done) {
+    taker.task('test', function() {
+      return vinyl.src('./fixtures/test.js', { cwd: __dirname })
+        .pipe(through.obj());
+    });
+
+    taker.parallel('test')(done);
+  });
+
   it('should handle a child process return', function(done) {
     taker.task('test', function() {
       if (isWindows) {
