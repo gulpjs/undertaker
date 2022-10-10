@@ -30,6 +30,9 @@ SetNoReturnRegistry.prototype.tasks = noop;
 
 function InvalidRegistry() {}
 
+function InvalidProtoRegistry() {}
+InvalidProtoRegistry.prototype = InvalidRegistry;
+
 describe('registry', function() {
 
   describe('method', function() {
@@ -143,6 +146,14 @@ describe('registry', function() {
       expect(taker.registry()).toBeInstanceOf(DefaultRegistry);
       expect(typeof taker.task('clean')).toEqual('function');
       expect(typeof taker.task('serve')).toEqual('function');
+      done();
+    });
+
+    it('should throw upon invalid registry', function(done) {
+      var taker = new Undertaker(new CommonRegistry());
+      expect(function() {
+        taker.registry(new InvalidProtoRegistry());
+      }).toThrow('Custom registry must have `get` function');
       done();
     });
 
