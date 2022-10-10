@@ -319,6 +319,3 @@ MIT
 [gulp-pipeline]: https://github.com/alienfast/gulp-pipeline
 [rails-registry]: https://github.com/alienfast/gulp-pipeline/blob/master/src/registry/railsRegistry.js
 <!-- prettier-ignore-end -->
-
-
-
