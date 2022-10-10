@@ -35,8 +35,6 @@
     "eslint": "^7.32.0",
     "eslint-config-gulp": "^5.0.1",
     "expect": "^27.5.1",
-    "gulp-jshint": "^2.1.0",
-    "jshint": "^2.13.5",
     "mocha": "^8.4.0",
     "nyc": "^15.1.0",
     "once": "^1.4.0",
