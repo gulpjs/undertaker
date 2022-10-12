@@ -205,6 +205,28 @@ describe('registry', function() {
     taker.series('test')();
   });
 
+  it('should fail if task name is of an inherited property', function(done) {
+    var tasks = {};
+    tasks.__proto__ = { notOwnProp: 1 }
+
+    function MyRegistry() {}
+    MyRegistry.prototype.init = noop;
+    MyRegistry.prototype.get = noop;
+    MyRegistry.prototype.set = noop;
+    MyRegistry.prototype.tasks = function() { return tasks; };
+
+    var registry = new MyRegistry();
+    var taker = new Undertaker(registry);
+
+    function fail() {
+      taker.series('notOwnProp');
+    }
+
+    expect(fail).toThrow(/Task never defined: notOwnProp/);
+
+    done();
+  });
+
   it('should fail and offer tasks which are close in name', function(done) {
     var taker = new Undertaker(new CommonRegistry());
     var customRegistry = new DefaultRegistry();
