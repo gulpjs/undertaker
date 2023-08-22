@@ -41,7 +41,7 @@
     "through2": "^4.0.2",
     "undertaker-common-tasks": "^2.0.0",
     "undertaker-task-metadata": "^2.0.0",
-    "vinyl-fs": "^3.0.3"
+    "vinyl-fs": "^4.0.0"
   },
   "nyc": {
     "reporter": [
