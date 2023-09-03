@@ -6,7 +6,6 @@ var os = require('os');
 var fs = require('fs');
 var path = require('path');
 var vinyl = require('vinyl-fs');
-var jshint = require('gulp-jshint');
 var spawn = require('child_process').spawn;
 var once = require('once');
 var aOnce = require('async-once');
@@ -55,10 +54,10 @@ describe('integrations', function() {
     taker.parallel('test')(done);
   });
 
-  it('should lints all piped files', function(done) {
+  it('should handle a Transform stream return', function(done) {
     taker.task('test', function() {
       return vinyl.src('./fixtures/test.js', { cwd: __dirname })
-        .pipe(jshint());
+        .pipe(through.obj());
     });
 
     taker.parallel('test')(done);
