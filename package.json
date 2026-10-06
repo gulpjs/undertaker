@@ -7,18 +7,24 @@
     "Blaine Bublitz <blaine.bublitz@gmail.com>",
     "Damien Lebrun <dinoboff@hotmail.com>"
   ],
-  "repository": "gulpjs/undertaker",
+  "funding": "https://github.com/sponsors/gulpjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gulpjs/undertaker.git"
+  },
   "license": "MIT",
   "engines": {
-    "node": ">=10.13.0"
+    "node": ">= 22.15.0"
   },
-  "main": "index.js",
+  "main": "./index.js",
   "files": [
     "LICENSE",
     "index.js",
     "lib"
   ],
   "scripts": {
+    "format-check": "prettier . --check",
+    "format-write": "prettier . --write",
     "lint": "eslint .",
     "pretest": "npm run lint",
     "test": "nyc mocha --async-only"
@@ -32,13 +38,14 @@
   "devDependencies": {
     "async-once": "^2.0.0",
     "del": "^6.1.1",
-    "eslint": "^7.32.0",
-    "eslint-config-gulp": "^5.0.1",
+    "eslint": "10.11.0",
+    "eslint-config-gulp": "7.0.0",
     "eslint-plugin-node": "^11.1.0",
     "expect": "^27.5.1",
     "mocha": "^8.4.0",
     "nyc": "^15.1.0",
     "once": "^1.4.0",
+    "prettier": "3.9.6",
     "through2": "^4.0.2",
     "undertaker-common-tasks": "^2.0.0",
     "undertaker-task-metadata": "^2.0.0",
@@ -49,9 +56,6 @@
       "lcov",
       "text-summary"
     ]
-  },
-  "prettier": {
-    "singleQuote": true
   },
   "keywords": [
     "registry",

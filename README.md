@@ -288,6 +288,16 @@ taker.task('default', taker.series('clean', 'build', 'serve', function(cb) {
 * [gulp-hub] - Custom registry to run tasks in multiple gulpfiles. (In a branch as of this writing)
 * [gulp-pipeline] - [RailsRegistry][rails-registry] is an ES2015 class that provides a gulp pipeline replacement for rails applications
 
+## Strict No LLM / No AI Policy
+
+No LLMs for issues.
+
+No LLMs for patches / pull requests.
+
+No LLMs for comments on the bug tracker, including translation.
+
+English is encouraged, but not required. You are welcome to post in your native language and rely on others to have their own translation tools of choice to interpret your words.
+
 ## License
 
 MIT
@@ -297,23 +307,9 @@ MIT
 [npm-url]: https://www.npmjs.com/package/undertaker
 [npm-image]: https://img.shields.io/npm/v/undertaker.svg?style=flat-square
 
-[ci-url]: https://github.com/gulpjs/undertaker/actions?query=workflow:dev
-[ci-image]: https://img.shields.io/github/workflow/status/gulpjs/undertaker/dev?style=flat-square
+[ci-url]: https://github.com/gulpjs/undertaker/actions/workflows/dev.yml
+[ci-image]: https://img.shields.io/github/actions/workflow/status/gulpjs/undertaker/dev.yml?style=flat-square
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/undertaker
-[coveralls-image]: https://img.shields.io/coveralls/gulpjs/undertaker/master.svg?style=flat-square
-<!-- prettier-ignore-end -->
-
-<!-- prettier-ignore-start -->
-[async-resolution]: https://github.com/phated/async-done#completion-and-error-resolution
-[undertaker-registry]: https://github.com/gulpjs/undertaker-registry
-[custom-registries]: #custom-registries
-[archy]: https://www.npmjs.org/package/archy
-[undertaker-forward-reference]: https://github.com/gulpjs/undertaker-forward-reference
-[undertaker-task-metadata]: https://github.com/gulpjs/undertaker-task-metadata
-[undertaker-common-tasks]: https://github.com/gulpjs/undertaker-common-tasks
-[alchemist-gulp]: https://github.com/webdesserts/alchemist-gulp
-[gulp-hub]: https://github.com/frankwallis/gulp-hub/tree/registry-init
-[gulp-pipeline]: https://github.com/alienfast/gulp-pipeline
-[rails-registry]: https://github.com/alienfast/gulp-pipeline/blob/master/src/registry/railsRegistry.js
+[coveralls-image]: https://img.shields.io/coveralls/gulpjs/undertaker/main.svg?style=flat-square
 <!-- prettier-ignore-end -->
