@@ -13,39 +13,40 @@ Task registry that allows composition through series/parallel methods.
 ## Usage
 
 ```js
-var fs = require('fs');
-var Undertaker = require('undertaker');
+var fs = require("fs");
+var Undertaker = require("undertaker");
 
 var taker = new Undertaker();
 
-taker.task('task1', function(cb){
+taker.task("task1", function (cb) {
   // do things
 
   cb(); // when everything is done
 });
 
-taker.task('task2', function(){
-  return fs.createReadStream('./myFile.js')
-    .pipe(fs.createWriteStream('./myFile.copy.js'));
+taker.task("task2", function () {
+  return fs
+    .createReadStream("./myFile.js")
+    .pipe(fs.createWriteStream("./myFile.copy.js"));
 });
 
-taker.task('task3', function(){
-  return new Promise(function(resolve, reject){
+taker.task("task3", function () {
+  return new Promise(function (resolve, reject) {
     // do things
 
     resolve(); // when everything is done
   });
 });
 
-taker.task('combined', taker.series('task1', 'task2'));
+taker.task("combined", taker.series("task1", "task2"));
 
-taker.task('all', taker.parallel('combined', 'task3'));
+taker.task("all", taker.parallel("combined", "task3"));
 ```
 
 ## API
 
-__Task functions can be completed in any of the ways supported by
-[`async-done`][async-resolution]__
+**Task functions can be completed in any of the ways supported by
+[`async-done`][async-resolution]**
 
 ### `new Undertaker([registryInstance])`
 
@@ -66,14 +67,14 @@ and returns the wrapped task (not the original function). The wrapped task has a
 method that will return the original function.
 
 If a function (`fn`) and optionally a string (`taskName`) is given, it behaves as
-a `setter` and will register the task by the `taskName`.  If `taskName` is not
+a `setter` and will register the task by the `taskName`. If `taskName` is not
 specified, the `name` or `displayName` property of the function is used as the `taskName`.
 
 Will throw if:
 
-* As a `getter`: `taskName` is missing or not a string.
-* As a `setter`: `taskName` is missing and `fn` is anonymous.
-* As a `setter`: `fn` is missing or not a function.
+- As a `getter`: `taskName` is missing or not a string.
+- As a `setter`: `taskName` is missing and `fn` is anonymous.
+- As a `setter`: `fn` is missing or not a function.
 
 ### `series(taskName || fn...)`
 
@@ -150,7 +151,7 @@ A registry's prototype should define:
 
 - `init(taker)`: receives the undertaker instance to set pre-defined tasks using the `task(taskName, fn)` method.
 - `get(taskName)`: returns the task with that name
-   or `undefined` if no task is registered with that name.
+  or `undefined` if no task is registered with that name.
 - `set(taskName, fn)`: add task to the registry. If `set` modifies a task, it should return the new task.
 - `tasks()`: returns an object listing all tasks in the registry.
 
@@ -160,11 +161,11 @@ keep its metadata consistent.
 The easiest way to create a custom registry is to inherit from [undertaker-registry]:
 
 ```js
-var util = require('util');
+var util = require("util");
 
-var DefaultRegistry = require('undertaker-registry');
+var DefaultRegistry = require("undertaker-registry");
 
-function MyRegistry(){
+function MyRegistry() {
   DefaultRegistry.call(this);
 }
 
@@ -182,70 +183,76 @@ prototype and it will receive the `Undertaker` instance as the only argument. Yo
 For example you might want to share a `clean` task:
 
 ```js
-var fs = require('fs');
-var util = require('util');
+var fs = require("fs");
+var util = require("util");
 
-var DefaultRegistry = require('undertaker-registry');
-var del = require('del');
+var DefaultRegistry = require("undertaker-registry");
+var del = require("del");
 
-function CommonRegistry(opts){
+function CommonRegistry(opts) {
   DefaultRegistry.call(this);
 
   opts = opts || {};
 
-  this.buildDir = opts.buildDir || './build';
+  this.buildDir = opts.buildDir || "./build";
 }
 
 util.inherits(CommonRegistry, DefaultRegistry);
 
-CommonRegistry.prototype.init = function(takerInst){
+CommonRegistry.prototype.init = function (takerInst) {
   var buildDir = this.buildDir;
   var exists = fs.existsSync(buildDir);
 
-  if(exists){
-    throw new Error('Cannot initialize common tasks. ' + buildDir + ' directory exists.');
+  if (exists) {
+    throw new Error(
+      "Cannot initialize common tasks. " + buildDir + " directory exists.",
+    );
   }
 
-  takerInst.task('clean', function(){
+  takerInst.task("clean", function () {
     return del([buildDir]);
   });
-}
+};
 
 module.exports = CommonRegistry;
 ```
 
 Then to use it in a project:
+
 ```js
-var Undertaker = require('undertaker');
-var CommonRegistry = require('myorg-common-tasks');
+var Undertaker = require("undertaker");
+var CommonRegistry = require("myorg-common-tasks");
 
-var taker = new Undertaker(CommonRegistry({ buildDir: '/dist' }));
+var taker = new Undertaker(CommonRegistry({ buildDir: "/dist" }));
 
-taker.task('build', taker.series('clean', function build(cb) {
-  // do things
-  cb();
-}));
+taker.task(
+  "build",
+  taker.series("clean", function build(cb) {
+    // do things
+    cb();
+  }),
+);
 ```
 
 ### Sharing Functionalities
 
 By controlling how tasks are added to the registry, you can decorate them.
 
-For example if you wanted all tasks to share some data,  you can use a custom registry
+For example if you wanted all tasks to share some data, you can use a custom registry
 to bind them to that data. Be sure to return the altered task, as per the description
 of registry methods above:
 
 ```js
-var util = require('util');
+var util = require("util");
 
-var Undertaker = require('undertaker');
-var DefaultRegistry = require('undertaker-registry');
+var Undertaker = require("undertaker");
+var DefaultRegistry = require("undertaker-registry");
 
 // Some task defined somewhere else
-var BuildRegistry = require('./build.js');
-var ServeRegistry = require('./serve.js');
+var BuildRegistry = require("./build.js");
+var ServeRegistry = require("./serve.js");
 
-function ConfigRegistry(config){
+function ConfigRegistry(config) {
   DefaultRegistry.call(this);
   this.config = config;
 }
@@ -254,7 +261,7 @@ util.inherits(ConfigRegistry, DefaultRegistry);
 
 ConfigRegistry.prototype.set = function set(name, fn) {
   // The `DefaultRegistry` uses `this._tasks` for storage.
-  var task = this._tasks[name] = fn.bind(this.config);
+  var task = (this._tasks[name] = fn.bind(this.config));
   return task;
 };
 
@@ -265,28 +272,33 @@ taker.registry(new ServeRegistry());
 
 // `taker.registry` will reset each task in the registry with
 // `ConfigRegistry.prototype.set` which will bind them to the config object.
-taker.registry(new ConfigRegistry({
-  src: './src',
-  build: './build',
-  bindTo: '0.0.0.0:8888'
-}));
+taker.registry(
+  new ConfigRegistry({
+    src: "./src",
+    build: "./build",
+    bindTo: "0.0.0.0:8888",
+  }),
+);
 
-taker.task('default', taker.series('clean', 'build', 'serve', function(cb) {
-  console.log('Server bind to ' + this.bindTo);
-  console.log('Serving' + this.build);
-  cb();
-}));
+taker.task(
+  "default",
+  taker.series("clean", "build", "serve", function (cb) {
+    console.log("Server bind to " + this.bindTo);
+    console.log("Serving" + this.build);
+    cb();
+  }),
+);
 ```
 
 ### In the wild
 
-* [undertaker-registry] - Custom registries probably want to inherit from this.
-* [undertaker-forward-reference] - Custom registry supporting forward referenced tasks (similar to gulp 3.x).
-* [undertaker-task-metadata] - Proof-of-concept custom registry that attaches metadata to each task.
-* [undertaker-common-tasks] - Proof-of-concept custom registry that pre-defines some tasks.
-* [alchemist-gulp] - A default set of tasks for building alchemist plugins.
-* [gulp-hub] - Custom registry to run tasks in multiple gulpfiles. (In a branch as of this writing)
-* [gulp-pipeline] - [RailsRegistry][rails-registry] is an ES2015 class that provides a gulp pipeline replacement for rails applications
+- [undertaker-registry] - Custom registries probably want to inherit from this.
+- [undertaker-forward-reference] - Custom registry supporting forward referenced tasks (similar to gulp 3.x).
+- [undertaker-task-metadata] - Proof-of-concept custom registry that attaches metadata to each task.
+- [undertaker-common-tasks] - Proof-of-concept custom registry that pre-defines some tasks.
+- [alchemist-gulp] - A default set of tasks for building alchemist plugins.
+- [gulp-hub] - Custom registry to run tasks in multiple gulpfiles. (In a branch as of this writing)
+- [gulp-pipeline] - [RailsRegistry][rails-registry] is an ES2015 class that provides a gulp pipeline replacement for rails applications
 
 ## Strict No LLM / No AI Policy
 

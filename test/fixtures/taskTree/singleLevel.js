@@ -1,16 +1,16 @@
-'use strict';
+"use strict";
 
 module.exports = {
-  label: 'Tasks',
+  label: "Tasks",
   nodes: [
     {
-      label: 'fn1',
-      type: 'task',
+      label: "fn1",
+      type: "task",
       nodes: [],
     },
     {
-      label: 'fn2',
-      type: 'task',
+      label: "fn2",
+      type: "task",
       nodes: [],
     },
   ],

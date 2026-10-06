@@ -1,25 +1,25 @@
-'use strict';
+"use strict";
 
 module.exports = {
-  label: 'Tasks',
+  label: "Tasks",
   nodes: [
     {
-      label: 'fn1',
-      type: 'task',
+      label: "fn1",
+      type: "task",
       nodes: [
         {
-          label: '<parallel>',
-          type: 'function',
+          label: "<parallel>",
+          type: "function",
           branch: true,
           nodes: [
             {
-              label: '<anonymous>',
-              type: 'function',
+              label: "<anonymous>",
+              type: "function",
               nodes: [],
             },
             {
-              label: 'noop',
-              type: 'function',
+              label: "noop",
+              type: "function",
               nodes: [],
             },
           ],
@@ -27,22 +27,22 @@ module.exports = {
       ],
     },
     {
-      label: 'fn2',
-      type: 'task',
+      label: "fn2",
+      type: "task",
       nodes: [
         {
-          label: '<parallel>',
-          type: 'function',
+          label: "<parallel>",
+          type: "function",
           branch: true,
           nodes: [
             {
-              label: '<anonymous>',
-              type: 'function',
+              label: "<anonymous>",
+              type: "function",
               nodes: [],
             },
             {
-              label: 'noop',
-              type: 'function',
+              label: "noop",
+              type: "function",
               nodes: [],
             },
           ],
@@ -50,31 +50,31 @@ module.exports = {
       ],
     },
     {
-      label: 'fn3',
-      type: 'task',
+      label: "fn3",
+      type: "task",
       nodes: [
         {
-          label: '<series>',
-          type: 'function',
+          label: "<series>",
+          type: "function",
           branch: true,
           nodes: [
             {
-              label: 'fn1',
-              type: 'task',
+              label: "fn1",
+              type: "task",
               nodes: [
                 {
-                  label: '<parallel>',
-                  type: 'function',
+                  label: "<parallel>",
+                  type: "function",
                   branch: true,
                   nodes: [
                     {
-                      label: '<anonymous>',
-                      type: 'function',
+                      label: "<anonymous>",
+                      type: "function",
                       nodes: [],
                     },
                     {
-                      label: 'noop',
-                      type: 'function',
+                      label: "noop",
+                      type: "function",
                       nodes: [],
                     },
                   ],
@@ -82,22 +82,22 @@ module.exports = {
               ],
             },
             {
-              label: 'fn2',
-              type: 'task',
+              label: "fn2",
+              type: "task",
               nodes: [
                 {
-                  label: '<parallel>',
-                  type: 'function',
+                  label: "<parallel>",
+                  type: "function",
                   branch: true,
                   nodes: [
                     {
-                      label: '<anonymous>',
-                      type: 'function',
+                      label: "<anonymous>",
+                      type: "function",
                       nodes: [],
                     },
                     {
-                      label: 'noop',
-                      type: 'function',
+                      label: "noop",
+                      type: "function",
                       nodes: [],
                     },
                   ],
