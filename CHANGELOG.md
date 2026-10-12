@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/gulpjs/undertaker/compare/v2.0.0...v3.0.0) (2026-10-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* Normalize repository, dropping Node <22.15.0 ([#104](https://github.com/gulpjs/undertaker/issues/104))
+
+### Miscellaneous Chores
+
+* Normalize repository, dropping Node &lt;22.15.0 ([#104](https://github.com/gulpjs/undertaker/issues/104)) ([6be20cc](https://github.com/gulpjs/undertaker/commit/6be20cc6b1a1ec5d0a7139e316cb5e0f8c3b283c))
+
 ## [2.0.0](https://www.github.com/gulpjs/undertaker/compare/v1.3.0...v2.0.0) (2024-03-22)
 
 
