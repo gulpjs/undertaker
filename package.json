@@ -32,7 +32,6 @@
   "dependencies": {
     "bach": "^2.0.1",
     "fast-levenshtein": "^3.0.0",
-    "i": "^0.3.7",
     "last-run": "^2.0.0",
     "undertaker-registry": "^2.0.0"
   },
