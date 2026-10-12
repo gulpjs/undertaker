@@ -1,7 +1,5 @@
-'use strict';
+"use strict";
 
-function helloWorld() {
-
-}
+function helloWorld() {}
 
 module.exports = helloWorld;
