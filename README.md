@@ -325,3 +325,17 @@ MIT
 [coveralls-url]: https://coveralls.io/r/gulpjs/undertaker
 [coveralls-image]: https://img.shields.io/coveralls/gulpjs/undertaker/main.svg?style=flat-square
 <!-- prettier-ignore-end -->
+
+<!-- prettier-ignore-start -->
+[async-resolution]: https://github.com/phated/async-done#completion-and-error-resolution
+[undertaker-registry]: https://github.com/gulpjs/undertaker-registry
+[custom-registries]: #custom-registries
+[archy]: https://www.npmjs.org/package/archy
+[undertaker-forward-reference]: https://github.com/gulpjs/undertaker-forward-reference
+[undertaker-task-metadata]: https://github.com/gulpjs/undertaker-task-metadata
+[undertaker-common-tasks]: https://github.com/gulpjs/undertaker-common-tasks
+[alchemist-gulp]: https://github.com/webdesserts/alchemist-gulp
+[gulp-hub]: https://github.com/frankwallis/gulp-hub/tree/registry-init
+[gulp-pipeline]: https://github.com/alienfast/gulp-pipeline
+[rails-registry]: https://github.com/alienfast/gulp-pipeline/blob/master/src/registry/railsRegistry.js
+<!-- prettier-ignore-end -->
