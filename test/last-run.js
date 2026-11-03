@@ -59,7 +59,7 @@ describe("lastRun", function () {
         taker.lastRun(function () {}),
         undefined,
       );
-      assert.throws(taker.lastRun.bind(taker, "notexists"), Error);
+      assert.throws(() => taker.lastRun("notexists"), Error);
       done(err);
     });
   });
