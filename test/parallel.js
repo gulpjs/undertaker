@@ -1,6 +1,7 @@
 "use strict";
 
-var expect = require("expect");
+var assert = require("node:assert");
+var { beforeEach, describe, it } = require("node:test");
 
 var Undertaker = require("../");
 
@@ -25,117 +26,111 @@ function fnError(done) {
 describe("parallel", function () {
   var taker;
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     taker = new Undertaker();
     taker.task("test1", fn1);
     taker.task("test2", fn2);
     taker.task("test3", fn3);
     taker.task("error", fnError);
-    done();
   });
 
-  it("should throw on non-valid tasks combined with valid tasks", function (done) {
+  it("should throw on non-valid tasks combined with valid tasks", function () {
     function fail() {
       taker.parallel("test1", "test2", "test3", {});
     }
 
-    expect(fail).toThrow(/Task never defined:/);
-    done();
+    assert.throws(fail, { message: /Task never defined:/ });
   });
 
-  it("should throw on tasks array with both valid and non-valid tasks", function (done) {
+  it("should throw on tasks array with both valid and non-valid tasks", function () {
     function fail() {
       taker.parallel(["test1", "test2", "test3", {}]);
     }
 
-    expect(fail).toThrow(/Task never defined:/);
-    done();
+    assert.throws(fail, { message: /Task never defined:/ });
   });
 
-  it("should throw on non-valid task", function (done) {
+  it("should throw on non-valid task", function () {
     function fail() {
       taker.parallel({});
     }
 
-    expect(fail).toThrow(/Task never defined:/);
-    done();
+    assert.throws(fail, { message: /Task never defined:/ });
   });
 
-  it("should throw when no tasks specified", function (done) {
+  it("should throw when no tasks specified", function () {
     function fail() {
       taker.parallel();
     }
 
-    expect(fail).toThrow(
-      /One or more tasks should be combined using series or parallel/,
-    );
-    done();
+    assert.throws(fail, {
+      message: /One or more tasks should be combined using series or parallel/,
+    });
   });
 
-  it("should throw on empty array of registered tasks", function (done) {
+  it("should throw on empty array of registered tasks", function () {
     function fail() {
       taker.parallel([]);
     }
 
-    expect(fail).toThrow(
-      /One or more tasks should be combined using series or parallel/,
-    );
-    done();
+    assert.throws(fail, {
+      message: /One or more tasks should be combined using series or parallel/,
+    });
   });
 
-  it("should take only one array of registered tasks", function (done) {
+  it("should take only one array of registered tasks", function (t, done) {
     taker.parallel(["test1", "test2", "test3"])(function (err, results) {
-      expect(results).toEqual([1, 2, 3]);
+      assert.deepStrictEqual(results, [1, 2, 3]);
       done(err);
     });
   });
 
-  it("should take all string names", function (done) {
+  it("should take all string names", function (t, done) {
     taker.parallel(
       "test1",
       "test2",
       "test3",
     )(function (err, results) {
-      expect(results).toEqual([1, 2, 3]);
+      assert.deepStrictEqual(results, [1, 2, 3]);
       done(err);
     });
   });
 
-  it("should take all functions", function (done) {
+  it("should take all functions", function (t, done) {
     taker.parallel(
       fn1,
       fn2,
       fn3,
     )(function (err, results) {
-      expect(results).toEqual([1, 2, 3]);
+      assert.deepStrictEqual(results, [1, 2, 3]);
       done(err);
     });
   });
 
-  it("should take string names and functions", function (done) {
+  it("should take string names and functions", function (t, done) {
     taker.parallel(
       "test1",
       fn2,
       "test3",
     )(function (err, results) {
-      expect(results).toEqual([1, 2, 3]);
+      assert.deepStrictEqual(results, [1, 2, 3]);
       done(err);
     });
   });
 
-  it("should take nested parallel", function (done) {
+  it("should take nested parallel", function (t, done) {
     var parallel1 = taker.parallel("test1", "test2", "test3");
     taker.parallel(
       "test1",
       parallel1,
       "test3",
     )(function (err, results) {
-      expect(results).toEqual([1, [1, 2, 3], 3]);
+      assert.deepStrictEqual(results, [1, [1, 2, 3], 3]);
       done(err);
     });
   });
 
-  it("should stop processing on error", function (done) {
+  it("should stop processing on error", function (t, done) {
     taker.on("error", function () {
       // To keep the test from catching the emitted errors
     });
@@ -144,22 +139,23 @@ describe("parallel", function () {
       "error",
       "test3",
     )(function (err, results) {
-      expect(err).toBeInstanceOf(Error);
-      expect(results).toEqual([1, undefined, undefined]);
+      assert.ok(err instanceof Error);
+      assert.deepStrictEqual(results, [1, undefined, undefined]);
       done();
     });
   });
 
-  it("should throw on unregistered task", function (done) {
+  it("should throw on unregistered task", function () {
     function unregistered() {
       taker.parallel("unregistered");
     }
 
-    expect(unregistered).toThrow("Task never defined: unregistered");
-    done();
+    assert.throws(unregistered, {
+      message: "Task never defined: unregistered",
+    });
   });
 
-  it("should process all functions if settle flag is true", function (done) {
+  it("should process all functions if settle flag is true", function (t, done) {
     taker.on("error", function () {
       // To keep the test from catching the emitted errors
     });
@@ -168,15 +164,14 @@ describe("parallel", function () {
       taker.parallel("test1", "error"),
       "test3",
     )(function (err, results) {
-      expect(err[0][0]).toBeInstanceOf(Error);
-      expect(results).toEqual([3]);
+      assert.ok(err[0][0] instanceof Error);
+      assert.deepStrictEqual(results, [3]);
       done();
     });
   });
 
-  it("should not register a displayName on the returned function by default", function (done) {
+  it("should not register a displayName on the returned function by default", function () {
     var task = taker.parallel(fn1);
-    expect(task.displayName).toEqual(undefined);
-    done();
+    assert.strictEqual(task.displayName, undefined);
   });
 });

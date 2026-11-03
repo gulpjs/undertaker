@@ -1,6 +1,7 @@
 "use strict";
 
-var expect = require("expect");
+var assert = require("node:assert");
+var { describe, it } = require("node:test");
 
 var Undertaker = require("../");
 
@@ -35,21 +36,19 @@ InvalidProtoRegistry.prototype = InvalidRegistry;
 
 describe("registry", function () {
   describe("method", function () {
-    it("should return the current registry when no arguments are given", function (done) {
+    it("should return the current registry when no arguments are given", function () {
       var taker = new Undertaker();
-      expect(taker.registry()).toEqual(taker._registry);
-      done();
+      assert.strictEqual(taker.registry(), taker._registry);
     });
 
-    it("should set the registry to the given registry instance argument", function (done) {
+    it("should set the registry to the given registry instance argument", function () {
       var taker = new Undertaker();
       var customRegistry = new CustomRegistry();
       taker.registry(customRegistry);
-      expect(taker.registry()).toEqual(customRegistry);
-      done();
+      assert.strictEqual(taker.registry(), customRegistry);
     });
 
-    it("should validate the custom registry instance", function (done) {
+    it("should validate the custom registry instance", function () {
       var taker = new Undertaker();
       var invalid = new InvalidRegistry();
 
@@ -57,104 +56,102 @@ describe("registry", function () {
         taker.registry(invalid);
       }
 
-      expect(invalidSet).toThrow("Custom registry must have `get` function");
-      done();
+      assert.throws(invalidSet, {
+        message: "Custom registry must have `get` function",
+      });
     });
 
-    it("should transfer all tasks from old registry to new", function (done) {
+    it("should transfer all tasks from old registry to new", function () {
       var taker = new Undertaker(new CommonRegistry());
       var customRegistry = new DefaultRegistry();
       taker.registry(customRegistry);
 
-      expect(typeof taker.task("clean")).toEqual("function");
-      expect(typeof taker.task("serve")).toEqual("function");
-      done();
+      assert.strictEqual(typeof taker.task("clean"), "function");
+      assert.strictEqual(typeof taker.task("serve"), "function");
     });
 
-    it("allows multiple custom registries to used", function (done) {
+    it("allows multiple custom registries to used", function (t, done) {
       var taker = new Undertaker();
       taker.registry(new CommonRegistry());
 
-      expect(typeof taker.task("clean")).toEqual("function");
-      expect(typeof taker.task("serve")).toEqual("function");
+      assert.strictEqual(typeof taker.task("clean"), "function");
+      assert.strictEqual(typeof taker.task("serve"), "function");
 
       taker.registry(new MetadataRegistry());
       taker.task("context", function (cb) {
-        expect(this).toEqual({ name: "context" });
+        assert.deepStrictEqual(this, { name: "context" });
         cb();
         done();
       });
 
       taker.registry(new DefaultRegistry());
 
-      expect(typeof taker.task("clean")).toEqual("function");
-      expect(typeof taker.task("serve")).toEqual("function");
-      expect(typeof taker.task("context")).toEqual("function");
+      assert.strictEqual(typeof taker.task("clean"), "function");
+      assert.strictEqual(typeof taker.task("serve"), "function");
+      assert.strictEqual(typeof taker.task("context"), "function");
 
       taker.series("context")();
     });
 
-    it("throws with a descriptive method when constructor is passed", function (done) {
+    it("throws with a descriptive method when constructor is passed", function () {
       var taker = new Undertaker();
 
       function ctor() {
         taker.registry(CommonRegistry);
       }
 
-      expect(ctor).toThrow(
-        "Custom registries must be instantiated, but it looks like you passed a constructor",
-      );
-      done();
+      assert.throws(ctor, {
+        message:
+          "Custom registries must be instantiated, but it looks like you passed a constructor",
+      });
     });
 
-    it("calls into the init function after tasks are transferred", function (done) {
+    it("calls into the init function after tasks are transferred", function () {
       var taker = new Undertaker(new CommonRegistry());
 
       var ogInit = DefaultRegistry.prototype.init;
 
       DefaultRegistry.prototype.init = function (inst) {
-        expect(inst).toEqual(taker);
-        expect(typeof inst.task("clean")).toEqual("function");
-        expect(typeof inst.task("serve")).toEqual("function");
+        assert.strictEqual(inst, taker);
+        assert.strictEqual(typeof inst.task("clean"), "function");
+        assert.strictEqual(typeof inst.task("serve"), "function");
       };
 
       taker.registry(new DefaultRegistry());
 
       DefaultRegistry.prototype.init = ogInit;
-      done();
     });
   });
 
   describe("constructor", function () {
-    it("should take a custom registry on instantiation", function (done) {
+    it("should take a custom registry on instantiation", function () {
       var taker = new Undertaker(new CustomRegistry());
-      expect(taker.registry()).toBeInstanceOf(CustomRegistry);
-      expect(taker.registry()).not.toBeInstanceOf(DefaultRegistry);
-      done();
+      assert.ok(taker.registry() instanceof CustomRegistry);
+      assert.strictEqual(taker.registry() instanceof DefaultRegistry, false);
     });
 
-    it("should default to undertaker-registry if not constructed with custom registry", function (done) {
+    it("should default to undertaker-registry if not constructed with custom registry", function () {
       var taker = new Undertaker();
-      expect(taker.registry()).toBeInstanceOf(DefaultRegistry);
-      expect(taker.registry()).not.toBeInstanceOf(CustomRegistry);
-      done();
+      assert.ok(taker.registry() instanceof DefaultRegistry);
+      assert.strictEqual(taker.registry() instanceof CustomRegistry, false);
     });
 
-    it("should take a registry that pre-defines tasks", function (done) {
+    it("should take a registry that pre-defines tasks", function () {
       var taker = new Undertaker(new CommonRegistry());
-      expect(taker.registry()).toBeInstanceOf(CommonRegistry);
-      expect(taker.registry()).toBeInstanceOf(DefaultRegistry);
-      expect(typeof taker.task("clean")).toEqual("function");
-      expect(typeof taker.task("serve")).toEqual("function");
-      done();
+      assert.ok(taker.registry() instanceof CommonRegistry);
+      assert.ok(taker.registry() instanceof DefaultRegistry);
+      assert.strictEqual(typeof taker.task("clean"), "function");
+      assert.strictEqual(typeof taker.task("serve"), "function");
     });
 
-    it("should throw upon invalid registry", function (done) {
+    it("should throw upon invalid registry", function () {
       var taker = new Undertaker(new CommonRegistry());
-      expect(function () {
-        taker.registry(new InvalidProtoRegistry());
-      }).toThrow("Custom registry must have `get` function");
-      done();
+      assert.throws(
+        function () {
+          taker.registry(new InvalidProtoRegistry());
+        },
+        { message: "Custom registry must have `get` function" },
+      );
     });
 
     it("should throw upon invalid registry", function (done) {
@@ -165,47 +162,54 @@ describe("registry", function () {
         taker = new Undertaker(new InvalidRegistry());
       }
 
-      expect(noGet).toThrow("Custom registry must have `get` function");
+      assert.throws(noGet, {
+        message: "Custom registry must have `get` function",
+      });
       InvalidRegistry.prototype.get = noop;
 
       function noSet() {
         taker = new Undertaker(new InvalidRegistry());
       }
 
-      expect(noSet).toThrow("Custom registry must have `set` function");
+      assert.throws(noSet, {
+        message: "Custom registry must have `set` function",
+      });
       InvalidRegistry.prototype.set = noop;
 
       function noInit() {
         taker = new Undertaker(new InvalidRegistry());
       }
 
-      expect(noInit).toThrow("Custom registry must have `init` function");
+      assert.throws(noInit, {
+        message: "Custom registry must have `init` function",
+      });
       InvalidRegistry.prototype.init = noop;
 
       function noTasks() {
         taker = new Undertaker(new InvalidRegistry());
       }
 
-      expect(noTasks).toThrow("Custom registry must have `tasks` function");
+      assert.throws(noTasks, {
+        message: "Custom registry must have `tasks` function",
+      });
       InvalidRegistry.prototype.tasks = noop;
 
       taker = new Undertaker(new InvalidRegistry());
-      done();
     });
   });
 
-  it("does not require the `set` method to return a task", function (done) {
+  it("does not require the `set` method to return a task", function (t, done) {
     var taker = new Undertaker();
     taker.registry(new SetNoReturnRegistry());
     taker.task("test", noop);
     taker.on("start", function (data) {
-      expect(data.name).toEqual("test");
+      assert.strictEqual(data.name, "test");
       done();
     });
     taker.series("test")();
   });
 
-  it("should fail if task name is of an inherited property", function (done) {
+  it("should fail if task name is of an inherited property", function () {
     var tasks = {};
     tasks.__proto__ = { notOwnProp: 1 };
 
@@ -224,12 +228,10 @@ describe("registry", function () {
       taker.series("notOwnProp");
     }
 
-    expect(fail).toThrow(/Task never defined: notOwnProp/);
-
-    done();
+    assert.throws(fail, { message: /Task never defined: notOwnProp/ });
   });
 
-  it("should fail and offer tasks which are close in name", function (done) {
+  it("should fail and offer tasks which are close in name", function () {
     var taker = new Undertaker(new CommonRegistry());
     var customRegistry = new DefaultRegistry();
     taker.registry(customRegistry);
@@ -237,8 +239,8 @@ describe("registry", function () {
     function fail() {
       taker.series("clear");
     }
-
-    expect(fail).toThrow(/Task never defined: clear - did you mean\? clean/);
-    done();
+    assert.throws(fail, {
+      message: /Task never defined: clear - did you mean\? clean/,
+    });
   });
 });

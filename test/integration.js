@@ -1,12 +1,13 @@
 "use strict";
 
-var expect = require("expect");
+var os = require("node:os");
+var fs = require("node:fs");
+var path = require("node:path");
+var spawn = require("node:child_process").spawn;
+var assert = require("node:assert");
+var { afterEach, beforeEach, describe, it } = require("node:test");
 
-var os = require("os");
-var fs = require("fs");
-var path = require("path");
 var vinyl = require("vinyl-fs");
-var spawn = require("child_process").spawn;
 var once = require("once");
 var aOnce = require("async-once");
 var del = require("del");
@@ -28,15 +29,14 @@ function noop() {}
 describe("integrations", function () {
   var taker;
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     taker = new Undertaker();
-    done();
   });
 
   beforeEach(cleanup);
   afterEach(cleanup);
 
-  it("should handle vinyl streams", function (done) {
+  it("should handle vinyl streams", function (t, done) {
     taker.task("test", function () {
       return vinyl
         .src("./fixtures/test.js", { cwd: __dirname })
@@ -46,7 +46,7 @@ describe("integrations", function () {
     taker.parallel("test")(done);
   });
 
-  it("should exhaust vinyl streams", function (done) {
+  it("should exhaust vinyl streams", function (t, done) {
     taker.task("test", function () {
       return vinyl.src("./fixtures/test.js", { cwd: __dirname });
     });
@@ -54,7 +54,7 @@ describe("integrations", function () {
     taker.parallel("test")(done);
   });
 
-  it("should handle a Transform stream return", function (done) {
+  it("should handle a Transform stream return", function (t, done) {
     taker.task("test", function () {
       return vinyl
         .src("./fixtures/test.js", { cwd: __dirname })
@@ -64,7 +64,7 @@ describe("integrations", function () {
     taker.parallel("test")(done);
   });
 
-  it("should handle a child process return", function (done) {
+  it("should handle a child process return", function (t, done) {
     taker.task("test", function () {
       if (isWindows) {
         return spawn("cmd", ["/c", "dir"]).on("error", noop);
@@ -76,7 +76,7 @@ describe("integrations", function () {
     taker.parallel("test")(done);
   });
 
-  it("should run dependencies once", function (done) {
+  it("should run dependencies once", function (t, done) {
     var count = 0;
 
     taker.task(
@@ -105,12 +105,12 @@ describe("integrations", function () {
     );
 
     taker.parallel("build")(function (err) {
-      expect(count).toEqual(1);
+      assert.strictEqual(count, 1);
       done(err);
     });
   });
 
-  it("should run dependencies once", function (done) {
+  it("should run dependencies once", function (t, done) {
     var count = 0;
 
     taker.task(
@@ -140,65 +140,67 @@ describe("integrations", function () {
     );
 
     taker.parallel("build")(function (err) {
-      expect(count).toEqual(1);
+      assert.strictEqual(count, 1);
       done(err);
     });
   });
 
-  it("can use lastRun with vinyl.src `since` option", function (done) {
-    this.timeout(5000);
+  it(
+    "can use lastRun with vinyl.src `since` option",
+    { timeout: 5000 },
+    function (t, done) {
+      var count = 0;
 
-    var count = 0;
+      function setup() {
+        return vinyl
+          .src("./fixtures/test*.js", { cwd: __dirname })
+          .pipe(vinyl.dest("./fixtures/tmp", { cwd: __dirname }));
+      }
 
-    function setup() {
-      return vinyl
-        .src("./fixtures/test*.js", { cwd: __dirname })
-        .pipe(vinyl.dest("./fixtures/tmp", { cwd: __dirname }));
-    }
+      function delay(cb) {
+        setTimeout(cb, 2000);
+      }
 
-    function delay(cb) {
-      setTimeout(cb, 2000);
-    }
+      // Some built
+      taker.task("build", function () {
+        return vinyl
+          .src("./fixtures/tmp/*.js", { cwd: __dirname })
+          .pipe(vinyl.dest("./fixtures/out", { cwd: __dirname }));
+      });
 
-    // Some built
-    taker.task("build", function () {
-      return vinyl
-        .src("./fixtures/tmp/*.js", { cwd: __dirname })
-        .pipe(vinyl.dest("./fixtures/out", { cwd: __dirname }));
-    });
-
-    function userEdit(cb) {
-      fs.appendFile(
-        path.join(__dirname, "./fixtures/tmp/testMore.js"),
-        " ",
-        cb,
-      );
-    }
-
-    function countEditedFiles() {
-      return vinyl
-        .src("./fixtures/tmp/*.js", {
-          cwd: __dirname,
-          since: taker.lastRun("build"),
-        })
-        .pipe(
-          through.obj(function (file, enc, cb) {
-            count++;
-            cb();
-          }),
+      function userEdit(cb) {
+        fs.appendFile(
+          path.join(__dirname, "./fixtures/tmp/testMore.js"),
+          " ",
+          cb,
         );
-    }
+      }
 
-    taker.series(
-      setup,
-      delay,
-      "build",
-      delay,
-      userEdit,
-      countEditedFiles,
-    )(function (err) {
-      expect(count).toEqual(1);
-      done(err);
-    });
-  });
+      function countEditedFiles() {
+        return vinyl
+          .src("./fixtures/tmp/*.js", {
+            cwd: __dirname,
+            since: taker.lastRun("build"),
+          })
+          .pipe(
+            through.obj(function (file, enc, cb) {
+              count++;
+              cb();
+            }),
+          );
+      }
+
+      taker.series(
+        setup,
+        delay,
+        "build",
+        delay,
+        userEdit,
+        countEditedFiles,
+      )(function (err) {
+        assert.strictEqual(count, 1);
+        done(err);
+      });
+    },
+  );
 });

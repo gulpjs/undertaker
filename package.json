@@ -26,8 +26,7 @@
     "format-check": "prettier . --check",
     "format-write": "prettier . --write",
     "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "nyc mocha --async-only"
+    "test": "node --test --experimental-test-coverage --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=test/lcov.info \"test/*.js\""
   },
   "dependencies": {
     "bach": "^2.0.1",
@@ -40,21 +39,12 @@
     "del": "^6.1.1",
     "eslint": "10.11.0",
     "eslint-config-gulp": "7.0.0",
-    "expect": "^27.5.1",
-    "mocha": "^8.4.0",
-    "nyc": "^15.1.0",
     "once": "^1.4.0",
     "prettier": "3.9.6",
     "through2": "^4.0.2",
     "undertaker-common-tasks": "^2.0.0",
     "undertaker-task-metadata": "^2.0.0",
     "vinyl-fs": "^4.0.0"
-  },
-  "nyc": {
-    "reporter": [
-      "lcov",
-      "text-summary"
-    ]
   },
   "keywords": [
     "registry",

@@ -1,6 +1,7 @@
 "use strict";
 
-var expect = require("expect");
+var assert = require("node:assert");
+var { beforeEach, describe, it } = require("node:test");
 
 var Undertaker = require("../");
 
@@ -18,12 +19,11 @@ function noop(done) {
 describe("tree", function () {
   var taker;
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     taker = new Undertaker();
-    done();
   });
 
-  it("should return a simple tree by default", function (done) {
+  it("should return a simple tree by default", function () {
     taker.task("test1", function (cb) {
       cb();
     });
@@ -51,11 +51,10 @@ describe("tree", function () {
 
     var tree = taker.tree();
 
-    expect(tree).toEqual(simple);
-    done();
+    assert.deepStrictEqual(tree, simple);
   });
 
-  it("should form a 1 level tree", function (done) {
+  it("should form a 1 level tree", function () {
     taker.task("fn1", function (cb) {
       cb();
     });
@@ -65,11 +64,10 @@ describe("tree", function () {
 
     var tree = taker.tree({ deep: true });
 
-    expect(tree).toEqual(singleLevel);
-    done();
+    assert.deepStrictEqual(tree, singleLevel);
   });
 
-  it("should form a 2 level nested tree", function (done) {
+  it("should form a 2 level nested tree", function () {
     taker.task("fn1", function (cb) {
       cb();
     });
@@ -80,11 +78,10 @@ describe("tree", function () {
 
     var tree = taker.tree({ deep: true });
 
-    expect(tree).toEqual(doubleLevel);
-    done();
+    assert.deepStrictEqual(tree, doubleLevel);
   });
 
-  it("should form a 3 level nested tree", function (done) {
+  it("should form a 3 level nested tree", function () {
     taker.task(
       "fn1",
       taker.parallel(function (cb) {
@@ -101,11 +98,10 @@ describe("tree", function () {
 
     var tree = taker.tree({ deep: true });
 
-    expect(tree).toEqual(tripleLevel);
-    done();
+    assert.deepStrictEqual(tree, tripleLevel);
   });
 
-  it("should use the proper labels for aliased tasks (simple)", function (done) {
+  it("should use the proper labels for aliased tasks (simple)", function () {
     var anon = function (cb) {
       cb();
     };
@@ -117,11 +113,10 @@ describe("tree", function () {
 
     var tree = taker.tree({ deep: true });
 
-    expect(tree).toEqual(aliasSimple);
-    done();
+    assert.deepStrictEqual(tree, aliasSimple);
   });
 
-  it("should use the proper labels for aliased tasks (nested)", function (done) {
+  it("should use the proper labels for aliased tasks (nested)", function () {
     taker.task(noop);
     taker.task("fn1", noop);
     taker.task("fn2", taker.task("noop"));
@@ -155,7 +150,6 @@ describe("tree", function () {
 
     var tree = taker.tree({ deep: true });
 
-    expect(tree).toEqual(aliasNested);
-    done();
+    assert.deepStrictEqual(tree, aliasNested);
   });
 });

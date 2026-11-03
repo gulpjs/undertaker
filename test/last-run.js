@@ -1,6 +1,7 @@
 "use strict";
 
-var expect = require("expect");
+var assert = require("node:assert");
+var { afterEach, beforeEach, describe, it } = require("node:test");
 
 var Undertaker = require("../");
 
@@ -8,7 +9,7 @@ describe("lastRun", function () {
   var taker, test1, test2, error, alias;
   var defaultResolution = process.env.UNDERTAKER_TIME_RESOLUTION;
 
-  beforeEach(function (done) {
+  beforeEach(function () {
     process.env.UNDERTAKER_TIME_RESOLUTION = "0";
     taker = new Undertaker();
 
@@ -30,16 +31,13 @@ describe("lastRun", function () {
 
     alias = test1;
     taker.task("alias", alias);
-
-    done();
   });
 
-  afterEach(function (done) {
+  afterEach(function () {
     process.env.UNDERTAKER_TIME_RESOLUTION = defaultResolution;
-    done();
   });
 
-  it("should only record time when task has completed", function (done) {
+  it("should only record time when task has completed", function (t, done) {
     var ts;
     var test = function (cb) {
       ts = taker.lastRun("test");
@@ -47,67 +45,70 @@ describe("lastRun", function () {
     };
     taker.task("test", test);
     taker.parallel("test")(function (err) {
-      expect(ts).toEqual(undefined);
+      assert.strictEqual(ts, undefined);
       done(err);
     });
   });
 
-  it("should record tasks time execution", function (done) {
+  it("should record tasks time execution", function (t, done) {
     taker.parallel("test1")(function (err) {
-      expect(taker.lastRun("test1")).toBeTruthy();
-      expect(taker.lastRun("test1")).toBeLessThanOrEqual(Date.now());
-      expect(taker.lastRun(test2)).toBeFalsy();
-      expect(taker.lastRun(function () {})).toBeFalsy();
-      expect(taker.lastRun.bind(taker, "notexists")).toThrow(Error);
+      assert.ok(taker.lastRun("test1"));
+      assert.strictEqual(taker.lastRun("test1") <= Date.now(), true);
+      assert.strictEqual(taker.lastRun(test2), undefined);
+      assert.strictEqual(
+        taker.lastRun(function () {}),
+        undefined,
+      );
+      assert.throws(() => taker.lastRun("notexists"), Error);
       done(err);
     });
   });
 
-  it("should record all tasks time execution", function (done) {
+  it("should record all tasks time execution", function (t, done) {
     taker.parallel(
       "test1",
       test2,
     )(function (err) {
-      expect(taker.lastRun("test1")).toBeTruthy();
-      expect(taker.lastRun("test1")).toBeLessThanOrEqual(Date.now());
-      expect(taker.lastRun(test2)).toBeTruthy();
-      expect(taker.lastRun(test2)).toBeLessThanOrEqual(Date.now());
+      assert.ok(taker.lastRun("test1"));
+      assert.strictEqual(taker.lastRun("test1") <= Date.now(), true);
+      assert.ok(taker.lastRun("test2"));
+      assert.strictEqual(taker.lastRun("test2") <= Date.now(), true);
       done(err);
     });
   });
 
-  it("should record same tasks time execution for a string task and its original", function (done) {
+  it("should record same tasks time execution for a string task and its original", function (t, done) {
     taker.series(test2)(function (err) {
-      expect(taker.lastRun(test2)).toEqual(taker.lastRun("test2"));
+      assert.strictEqual(taker.lastRun(test2), taker.lastRun("test2"));
       done(err);
     });
   });
 
-  it("should record tasks time execution for an aliased task", function (done) {
+  it("should record tasks time execution for an aliased task", function (t, done) {
     taker.series("alias")(function (err) {
-      expect(taker.lastRun("alias")).toEqual(taker.lastRun("test1"));
+      assert.strictEqual(taker.lastRun("alias"), taker.lastRun("test1"));
       done(err);
     });
   });
 
-  it("should give time with 1s resolution", function (done) {
+  it("should give time with 1s resolution", function (t, done) {
     var resolution = 1000; // 1s
     var since = Date.now();
     var expected = since - (since % resolution);
 
     taker.series("test1")(function () {
-      expect(taker.lastRun("test1", resolution)).toEqual(expected);
+      assert.strictEqual(taker.lastRun("test1", resolution), expected);
       done();
     });
   });
 
-  it("should not record task start time on error", function (done) {
+  it("should not record task start time on error", function (t, done) {
     taker.on("error", function () {
       // To keep the test from catching the emitted errors
     });
     taker.series("error")(function (err) {
-      expect(err).toBeTruthy();
-      expect(taker.lastRun("error")).toBeFalsy();
+      assert.ok(err instanceof Error);
+      assert.strictEqual(taker.lastRun("error"), undefined);
       done();
     });
   });
